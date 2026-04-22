@@ -53,6 +53,8 @@ const C = {
 const MONO = "'JetBrains Mono', 'Fira Code', monospace";
 const SANS = "'Noto Sans KR', sans-serif";
 
+const newsData = [];
+
 
 /* ==========================================================================
    ✏️  홈페이지 텍스트 수정은 이 CONTENT 객체만 편집하세요
@@ -314,70 +316,122 @@ function SectionLabel({ num, text }) {
    ========================================================================== */
 function Nav({ view, setView, scrollToSection }) {
   const [scrolled, setScrolled] = useState(false);
-  
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // 메뉴 리스트 (News는 별도 뷰로 분리)
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   const menuLinks = [
     { name: 'Services', sectionId: 'services' },
     { name: 'Curriculum', sectionId: 'curriculum' },
     { name: 'Impact', sectionId: 'impact' },
-    { name: 'About', sectionId: 'about' }
+    { name: 'About', sectionId: 'about' },
   ];
 
+  const handleMobileNav = (sectionId) => {
+    setMenuOpen(false);
+    setTimeout(() => scrollToSection(sectionId), 100);
+  };
+
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: "16px 28px",
-      background: scrolled || view !== 'home' ? "rgba(10,10,10,.85)" : "transparent", backdropFilter: scrolled || view !== 'home' ? "blur(12px)" : "none",
-      borderBottom: scrolled || view !== 'home' ? `1px solid ${C.border}` : "1px solid transparent", transition: "all .3s ease",
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-    }}>
-      {/* 로고 클릭 시 메인으로 이동 & 스크롤 초기화 */}
-      <div onClick={() => { setView('home'); window.scrollTo(0,0); }} style={{ cursor: 'pointer', fontFamily: MONO, fontSize: 14, fontWeight: 700, color: C.textBright, display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ color: C.green }}>▲</span>
-        <span>unlearning<span style={{ color: C.textDim }}>_company</span></span>
-      </div>
+    <>
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: "16px 28px",
+        background: scrolled || view !== 'home' || menuOpen ? "rgba(10,10,10,.95)" : "transparent",
+        backdropFilter: scrolled || view !== 'home' ? "blur(12px)" : "none",
+        borderBottom: scrolled || view !== 'home' ? `1px solid ${C.border}` : "1px solid transparent",
+        transition: "all .3s ease", display: "flex", alignItems: "center", justifyContent: "space-between",
+      }}>
+        <div onClick={() => { setView('home'); window.scrollTo(0,0); setMenuOpen(false); }} style={{ cursor: 'pointer', fontFamily: MONO, fontSize: 14, fontWeight: 700, color: C.textBright, display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ color: C.green }}>▲</span>
+          <span>unlearning<span style={{ color: C.textDim }}>_company</span></span>
+        </div>
 
-      <div className="nav-links" style={{ display: "flex", gap: "36px", alignItems: "center" }}>
-        {menuLinks.map(link => (
-          <button key={link.name} onClick={() => scrollToSection(link.sectionId)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            fontFamily: MONO, fontSize: 13, color: C.textDim, transition: "color .2s", letterSpacing: "0.05em"
-          }}
-          onMouseEnter={e => e.target.style.color = C.green}
-          onMouseLeave={e => e.target.style.color = C.textDim}
+        <div className="nav-links" style={{ display: "flex", gap: "36px", alignItems: "center" }}>
+          {menuLinks.map(link => (
+            <button key={link.name} onClick={() => scrollToSection(link.sectionId)} style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontFamily: MONO, fontSize: 13, color: C.textDim, transition: "color .2s", letterSpacing: "0.05em"
+            }}
+            onMouseEnter={e => e.target.style.color = C.green}
+            onMouseLeave={e => e.target.style.color = C.textDim}
+            >
+              {link.name}
+            </button>
+          ))}
+          <button onClick={() => { setView('news'); window.scrollTo(0,0); }} style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontFamily: MONO, fontSize: 13, color: view === 'news' || (typeof view === 'object' && view.type === 'post') ? C.green : C.textDim, transition: "color .2s", letterSpacing: "0.05em"
+            }}
+            onMouseEnter={e => e.target.style.color = C.green}
+            onMouseLeave={e => { if(view !== 'news' && !(typeof view === 'object' && view.type === 'post')) e.target.style.color = C.textDim; }}
           >
-            {link.name}
+            News
           </button>
-        ))}
-        {/* 뉴스/게시판 메뉴 (별도 뷰 전환) */}
-        <button onClick={() => { setView('news'); window.scrollTo(0,0); }} style={{
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={() => scrollToSection('contact')} className="nav-cta" style={{
+            fontFamily: MONO, fontSize: 12, color: C.green, background: "transparent", border: `1px solid ${C.green}`,
+            padding: "8px 16px", borderRadius: 4, transition: "all .2s", whiteSpace: "nowrap", cursor: "pointer"
+          }} onMouseEnter={e => { e.target.style.background = C.green; e.target.style.color = C.bg; }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = C.green; }}>
+            무료 진단받기 →
+          </button>
+          <button className="hamburger" onClick={() => setMenuOpen(o => !o)} style={{
             background: "none", border: "none", cursor: "pointer",
-            fontFamily: MONO, fontSize: 13, color: view === 'news' || (typeof view === 'object' && view.type === 'post') ? C.green : C.textDim, transition: "color .2s", letterSpacing: "0.05em"
-          }}
-          onMouseEnter={e => e.target.style.color = C.green}
-          onMouseLeave={e => { if(view !== 'news' && !(typeof view === 'object' && view.type === 'post')) e.target.style.color = C.textDim; }}
-        >
-          News
-        </button>
-      </div>
+            color: C.textBright, fontSize: 24, lineHeight: 1, padding: "4px 6px", display: "flex", alignItems: "center"
+          }}>
+            {menuOpen ? '✕' : '☰'}
+          </button>
+        </div>
 
-      <button onClick={() => scrollToSection('contact')} className="nav-cta" style={{
-        fontFamily: MONO, fontSize: 12, color: C.green, background: "transparent", border: `1px solid ${C.green}`,
-        padding: "8px 16px", borderRadius: 4, transition: "all .2s", whiteSpace: "nowrap", cursor: "pointer"
-      }} onMouseEnter={e => { e.target.style.background = C.green; e.target.style.color = C.bg; }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = C.green; }}>
-        무료 진단받기 →
-      </button>
+        <style>{`
+          @media (max-width: 768px) { .nav-links { display: none !important; } .nav-cta { display: none !important; } }
+          @media (min-width: 769px) { .hamburger { display: none !important; } }
+          @media (max-width: 480px) { nav { padding: 12px 16px !important; } }
+        `}</style>
+      </nav>
 
-      <style>{`
-        @media (max-width: 768px) { .nav-links { display: none !important; } }
-        @media (max-width: 480px) { nav { padding: 12px 16px !important; } }
-      `}</style>
-    </nav>
+      {menuOpen && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 99,
+          background: "rgba(10,10,10,0.97)",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12
+        }}>
+          {menuLinks.map(link => (
+            <button key={link.name} onClick={() => handleMobileNav(link.sectionId)} style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontFamily: MONO, fontSize: 22, color: C.textBright, letterSpacing: "0.05em",
+              padding: "12px 0", width: "100%", textAlign: "center"
+            }}>
+              {link.name}
+            </button>
+          ))}
+          <button onClick={() => { setMenuOpen(false); setView('news'); window.scrollTo(0,0); }} style={{
+            background: "none", border: "none", cursor: "pointer",
+            fontFamily: MONO, fontSize: 22, color: C.textBright, letterSpacing: "0.05em",
+            padding: "12px 0", width: "100%", textAlign: "center"
+          }}>
+            News
+          </button>
+          <button onClick={() => { setMenuOpen(false); setTimeout(() => scrollToSection('contact'), 100); }} style={{
+            marginTop: 24, fontFamily: MONO, fontSize: 15, color: C.green,
+            background: "transparent", border: `1px solid ${C.green}`,
+            padding: "14px 36px", borderRadius: 4, cursor: "pointer"
+          }}>
+            무료 진단받기 →
+          </button>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -504,18 +558,44 @@ function ServicesSection() {
           {CONTENT.services.subtext}
         </p>
 
-        <div style={{ display: "flex", gap: 12, marginBottom: 32, borderBottom: `1px solid ${C.border}`, overflowX: "auto" }}>
+        <div className="track-tabs" style={{ display: "flex", gap: 12, marginBottom: 32 }}>
           {tracks.map((t, i) => (
-            <button key={i} onClick={() => setActive(i)} style={{
-              background: "transparent", border: "none", borderBottom: `2px solid ${active === i ? C.green : "transparent"}`,
-              color: active === i ? C.textBright : C.textDim, fontFamily: SANS, fontSize: 16, fontWeight: active === i ? 700 : 400,
-              padding: "14px 20px", cursor: "pointer", transition: "all .2s", whiteSpace: "nowrap"
-            }}>
-              <span style={{ color: active === i ? C.green : C.textFaint, fontFamily: MONO, marginRight: 8 }}>Track {t.id}.</span>
-              {t.title}
+            <button key={i} onClick={() => setActive(i)} className={`track-tab-btn${active === i ? " track-tab-active" : ""}`}>
+              <div className="track-tab-inner">
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span className="track-tab-dot" />
+                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em" }}>Track {t.id}</span>
+                </div>
+                <div style={{ fontFamily: SANS, fontSize: 15, fontWeight: 600, marginTop: 6, wordBreak: "keep-all", lineHeight: 1.4 }}>{t.title}</div>
+              </div>
+              <span className="track-tab-arrow">›</span>
             </button>
           ))}
         </div>
+        <style>{`
+          .track-tab-btn {
+            flex: 1; display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 20px; border-radius: 10px; cursor: pointer; transition: all .2s;
+            border: 1.5px solid ${C.border}; background: ${C.bgCard};
+            color: ${C.textDim}; text-align: left;
+          }
+          .track-tab-btn:hover { border-color: ${C.green}88; color: ${C.textBright}; }
+          .track-tab-active {
+            border-color: ${C.green} !important; background: ${C.green}18 !important;
+            color: ${C.textBright} !important;
+          }
+          .track-tab-dot {
+            width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid ${C.textFaint};
+            flex-shrink: 0; transition: all .2s;
+          }
+          .track-tab-active .track-tab-dot { background: ${C.green}; border-color: ${C.green}; }
+          .track-tab-arrow { font-size: 22px; color: ${C.textFaint}; margin-left: 12px; flex-shrink: 0; transition: all .2s; }
+          .track-tab-active .track-tab-arrow { color: ${C.green}; transform: rotate(90deg); }
+          @media (max-width: 768px) {
+            .track-tabs { flex-direction: column; gap: 10px; }
+            .track-tab-btn { flex: unset; }
+          }
+        `}</style>
 
         <div style={{ animation: "fadeInUp .5s ease" }} key={active}>
           <div style={{ marginBottom: 32 }}>
@@ -1017,15 +1097,21 @@ function Footer() {
             {CONTENT.footer.tagline}
           </div>
         </div>
-        <div style={{ fontFamily: MONO, fontSize: 13, color: C.textDim, lineHeight: 1.8, textAlign: "right" }}>
+        <div className="footer-contact" style={{ fontFamily: MONO, fontSize: 13, color: C.textDim, lineHeight: 1.8 }}>
           <div>{CONTENT.footer.email}</div>
           <div>B2B2G / CSR Partnership</div>
         </div>
       </div>
-      <div style={{ maxWidth: 1000, margin: "60px auto 0", paddingTop: 24, borderTop: `1px dashed ${C.border}`, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, fontFamily: MONO, fontSize: 11, color: C.textFaint }}>
+      <div className="footer-bottom" style={{ maxWidth: 1000, margin: "60px auto 0", paddingTop: 24, borderTop: `1px dashed ${C.border}`, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, fontFamily: MONO, fontSize: 11, color: C.textFaint }}>
         <div>© 2026 unlearning company. All rights reserved.</div>
         <div>$ echo "세상을 바꾸는 일에만 집중하세요."</div>
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-contact { text-align: left !important; }
+          .footer-bottom { flex-direction: column; gap: 8px; }
+        }
+      `}</style>
     </footer>
   );
 }
