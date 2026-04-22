@@ -107,6 +107,74 @@ const newsData = [
 ];
 
 /* ==========================================================================
+   ✏️  홈페이지 텍스트 수정은 이 CONTENT 객체만 편집하세요
+   ========================================================================== */
+const CONTENT = {
+
+  // ① 히어로 섹션 — 맨 처음 보이는 화면
+  hero: {
+    headingLine1: "세상을 바꾸는 일에만",
+    headingLine2: "집중하세요.",          // 초록색으로 표시되는 부분
+    subtext: "매일 반복되는 복잡한 서류 작업과 영수증 정리에 지치셨나요?\n언러닝컴퍼니의 AI와 청년 전문가들이 여러분의 행정 업무를 직접 해결해 드립니다.",
+  },
+
+  // ② 서비스 섹션
+  services: {
+    headingLine1: "우리는 조언만 하는 컨설턴트가 아닙니다.",
+    headingLine2: "직접 일을 해결하는 파트너",   // 초록색
+    subtext: "어려운 IT 용어는 몰라도 괜찮습니다. 언러닝컴퍼니가 제공하는 두 가지 핵심 트랙으로 조직의 짐을 덜어드립니다.",
+    trackA: {
+      title: "내부의 복잡한 일 줄이기",
+      subtitle: "맞춤형 AI 시스템 이식",
+      desc: "단순히 좋은 툴을 알려주고 끝나는 교육이 아닙니다. 전문가가 직접 우리 회사의 상황을 살펴보고, 찰떡같이 맞는 시스템을 만들어 드립니다. 시스템이 제대로 굴러갈 때까지 우리가 책임지고 함께합니다.",
+    },
+    trackB: {
+      title: "새로운 프로젝트 함께 따내기",
+      subtitle: "외부 사업 확장 파트너",
+      desc: "내부 일이 정리되었다면, 이제 함께 밖으로 나갈 차례입니다. 언러닝컴퍼니의 전문가들과 함께 정부나 대기업의 새로운 지원 사업을 따내보세요. 복잡한 제안서 작성부터 꼼꼼한 실무 운영까지 우리가 든든한 파트너가 되어 드립니다.",
+    },
+    budgetBox: {
+      heading: '"이 모든 과정이 우리 단체에는 너무 비싸지 않을까요?"',
+      desc: "걱정 마세요! 언러닝컴퍼니는 정부 및 기업의 지원금(B2G/CSR 예산)을 꼼꼼히 찾아 연결해 드립니다. 이를 통해 고객이 직접 부담해야 하는 비용을 최소화(또는 0원)하여 혁신을 시작할 수 있도록 돕습니다.",
+    },
+  },
+
+  // ④ 임팩트 섹션
+  impact: {
+    headingLine1: "우리가 시스템을 바꿀 때,",
+    headingLine2: "이만큼 변화",           // 하늘색
+    cards: [
+      { num: "10,400", unit: "시간 확보",  title: "가치 창출 시간의 극대화",  desc: "10개의 조직이 우리와 함께한다면, 1년 동안 세상을 바꾸는 핵심 업무에 10,400시간을 더 사용할 수 있습니다. (조직당 주 20시간 절약 기준)" },
+      { num: "4+",     unit: "명 청년 투입", title: "진짜 청년 일자리 창출",   desc: "AI 툴은 다루지만 실전 포트폴리오가 필요한 청년(AX 빌더) 4명 이상에게, 진짜 현장에서 일하며 성장할 수 있는 완벽한 기회를 제공합니다." },
+      { num: "66",     unit: "% 재투자",   title: "건강한 생태계 선순환",    desc: "우리가 벌어들인 이익의 3분의 2 이상은 약자를 돕는 기술을 연구하고, 청년들을 교육하는 데 다시 사용됩니다." },
+    ],
+  },
+
+  // ⑤ 어바웃 섹션
+  about: {
+    headingLine1: "우리는 10년 넘게 이 바닥에서 굴러본",
+    headingLine2: "진짜 내부자들",          // 주황색
+    subtext: "수백, 수천만 원짜리 번지르르한 시스템을 팔려는 것이 아닙니다.\n저희 역시 임팩트 생태계에서 10년 이상 직접 몸으로 부딪히며, 서류 작업에 치여 정작 중요한 가치를 놓쳤던 뼈아픈 경험이 있습니다.",
+    philosophyQuote: "채우기 위해서는 먼저 비워야 합니다.",
+    philosophyBody: "조직의 혁신은 새로운 툴을 억지로 배우는 것에서 시작하지 않습니다. 기존의 비효율적인 관행을 먼저 잊어버리는 것(Unlearning)이 핵심입니다. 우리는 대표님과 핵심 멤버 3인의 깊은 현장 경험을 바탕으로, 조직에 어울리지 않는 '오버스펙 기술' 대신, 현장에서 지금 당장 가볍게 쓸 수 있는 '적정 기술'만을 엄선하여 직접 설치하고 운전해 드립니다.",
+    tags: ["10년차 생태계 경험", "AI 적정기술 설계", "정부지원금 매칭 전문가", "청년 AX 빌더 투입"],
+  },
+
+  // ⑥ 컨택 섹션
+  contact: {
+    headingLine1: "당신의 조직은 지금,",
+    headingLine2: "어떤 업무가 가장 힘드신가요?",  // 초록색
+    subtext: "\"회계 정산이 너무 오래 걸려요.\" \"지원금 결과 보고서 쓰느라 밤을 새워요.\"\n가장 고민인 업무를 남겨주세요. 10년 차 전문가가 직접 연락드려 가장 확실하고, 비용 부담 없는 해결책을 제안해 드립니다.",
+  },
+
+  // ⑦ 푸터
+  footer: {
+    tagline: "세상을 바꾸는 사람들이 미션에만 몰입할 수 있도록,\nAI와 청년 전문가가 복잡한 행정 업무를 대신 해결합니다.",
+    email: "hello@unlearning.co",
+  },
+};
+
+/* ==========================================================================
    SANITY CONFIG
    ========================================================================== */
 const SANITY_PROJECT_ID = '77kdc69b';
@@ -134,17 +202,6 @@ async function fetchSanityPosts() {
   const data = await res.json();
   return (data.result && data.result.length > 0) ? data.result : localPosts;
 }
-
-async function fetchSiteConfig() {
-  const query = encodeURIComponent('*[_type == "siteConfig"][0]');
-  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${query}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.result || null;
-}
-
-const SiteConfigContext = React.createContext(null);
-const useSiteConfig = () => React.useContext(SiteConfigContext);
 
 function getSanityImageUrl(image, width = 800) {
   if (!image?.asset?._ref) return null;
@@ -395,7 +452,6 @@ function MainView() {
 
 // 개별 섹션들 (기존 코드 유지)
 function HeroSection() {
-  const cfg = useSiteConfig()?.hero;
   const [phase, setPhase] = useState(0);
   const [cmdTyped, setCmdTyped] = useState("");
   const [resLines, setResLines] = useState([]);
@@ -447,11 +503,11 @@ function HeroSection() {
         textAlign: "center", opacity: showContent ? 1 : 0, transform: showContent ? "translateY(0)" : "translateY(16px)", transition: "all .8s ease", marginBottom: 40, zIndex: 1
       }}>
         <h1 style={{ fontFamily: SANS, fontSize: "clamp(32px, 6vw, 56px)", fontWeight: 900, lineHeight: 1.25, color: C.textBright, letterSpacing: "-.02em", wordBreak: "keep-all", maxWidth: 900, margin: "0 auto" }}>
-          {cfg?.headingLine1 || "세상을 바꾸는 일에만"}<br />
-          <span style={{ color: C.green }}>{cfg?.headingLine2 || "집중하세요."}</span>
+          {CONTENT.hero.headingLine1}<br />
+          <span style={{ color: C.green }}>{CONTENT.hero.headingLine2}</span>
         </h1>
         <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 2vw, 18px)", fontWeight: 300, color: C.textDim, marginTop: 20, lineHeight: 1.8, wordBreak: "keep-all", maxWidth: 640, margin: "20px auto 0" }}>
-          {cfg?.subtext || "매일 반복되는 복잡한 서류 작업과 영수증 정리에 지치셨나요?\n언러닝컴퍼니의 AI와 청년 전문가들이 여러분의 행정 업무를 직접 해결해 드립니다."}
+          {CONTENT.hero.subtext}
         </p>
       </div>
 
@@ -466,24 +522,23 @@ function HeroSection() {
 }
 
 function ServicesSection() {
-  const cfg = useSiteConfig()?.services;
   const [ref, visible] = useInView();
   const [active, setActive] = useState(0);
 
   const tracks = [
     {
       id: "A",
-      title: cfg?.trackA?.title || "내부의 복잡한 일 줄이기",
-      subtitle: cfg?.trackA?.subtitle || "맞춤형 AI 시스템 이식",
-      desc: cfg?.trackA?.desc || "단순히 좋은 툴을 알려주고 끝나는 교육이 아닙니다. 전문가가 직접 우리 회사의 상황을 살펴보고, 찰떡같이 맞는 시스템을 만들어 드립니다. 시스템이 제대로 굴러갈 때까지 우리가 책임지고 함께합니다.",
+      title: CONTENT.services.trackA.title,
+      subtitle: CONTENT.services.trackA.subtitle,
+      desc: CONTENT.services.trackA.desc,
       before: ["> [ERROR] 영수증 풀칠, 중복되는 엑셀 수기 입력", "> [WARN] 담당자 퇴사 시 업무 노하우 소멸"],
       after: ["> [OK] AI 기반 자동 정산 및 문서화 시스템 안착", "> [OK] 누구나 따라 할 수 있는 실무 위키(레시피) 완성"]
     },
     {
       id: "B",
-      title: cfg?.trackB?.title || "새로운 프로젝트 함께 따내기",
-      subtitle: cfg?.trackB?.subtitle || "외부 사업 확장 파트너",
-      desc: cfg?.trackB?.desc || "내부 일이 정리되었다면, 이제 함께 밖으로 나갈 차례입니다. 언러닝컴퍼니의 전문가들과 함께 정부나 대기업의 새로운 지원 사업을 따내보세요. 복잡한 제안서 작성부터 꼼꼼한 실무 운영까지 우리가 든든한 파트너가 되어 드립니다.",
+      title: CONTENT.services.trackB.title,
+      subtitle: CONTENT.services.trackB.subtitle,
+      desc: CONTENT.services.trackB.desc,
       before: ["> [ERROR] 좋은 기획은 있지만 실행할 손발이 부족함", "> [WARN] 지원 사업 제안서 및 결과 보고서 작성 부담"],
       after: ["> [OK] 10년차 전문가가 제안서 작성 및 전략 세팅 완료", "> [OK] 청년 전문가(AX 빌더) 실무 투입, 운영 안착"]
     }
@@ -494,11 +549,11 @@ function ServicesSection() {
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
         <SectionLabel num="01" text="Services" />
         <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
-          {cfg?.headingLine1 || "우리는 조언만 하는 컨설턴트가 아닙니다."}<br />
-          <span style={{ color: C.green }}>{cfg?.headingLine2 || "직접 일을 해결하는 파트너"}</span>입니다.
+          {CONTENT.services.headingLine1}<br />
+          <span style={{ color: C.green }}>{CONTENT.services.headingLine2}</span>입니다.
         </h2>
         <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all" }}>
-          {cfg?.subtext || "어려운 IT 용어는 몰라도 괜찮습니다. 언러닝컴퍼니가 제공하는 두 가지 핵심 트랙으로 조직의 짐을 덜어드립니다."}
+          {CONTENT.services.subtext}
         </p>
 
         <div style={{ display: "flex", gap: 12, marginBottom: 32, borderBottom: `1px solid ${C.border}`, overflowX: "auto" }}>
@@ -534,10 +589,10 @@ function ServicesSection() {
         <div style={{ marginTop: 48, padding: "24px", background: `linear-gradient(90deg, ${C.green}11, transparent)`, border: `1px solid ${C.green}44`, borderLeft: `4px solid ${C.green}`, borderRadius: 8 }}>
           <div style={{ fontFamily: MONO, fontSize: 13, color: C.green, fontWeight: 700, marginBottom: 10 }}>$ check-budget --matching="B2G/CSR"</div>
           <h4 style={{ fontFamily: SANS, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 8 }}>
-            {cfg?.budgetBox?.heading || '"이 모든 과정이 우리 단체에는 너무 비싸지 않을까요?"'}
+            {CONTENT.services.budgetBox.heading}
           </h4>
           <p style={{ fontFamily: SANS, fontSize: 15, fontWeight: 300, color: C.textDim, lineHeight: 1.6, wordBreak: "keep-all" }}>
-            {cfg?.budgetBox?.desc || "걱정 마세요! 언러닝컴퍼니는 정부 및 기업의 지원금(B2G/CSR 예산)을 꼼꼼히 찾아 연결해 드립니다. 이를 통해 고객이 직접 부담해야 하는 비용을 최소화(또는 0원)하여 혁신을 시작할 수 있도록 돕습니다."}
+            {CONTENT.services.budgetBox.desc}
           </p>
         </div>
       </div>
@@ -692,22 +747,16 @@ function RecommendedTracksSection() {
 }
 
 function ImpactSection() {
-  const cfg = useSiteConfig()?.impact;
   const [ref, visible] = useInView();
-  const defaultImpacts = [
-    { num: "10,400", unit: "시간 확보", title: "가치 창출 시간의 극대화", desc: "10개의 조직이 우리와 함께한다면, 1년 동안 세상을 바꾸는 핵심 업무에 10,400시간을 더 사용할 수 있습니다. (조직당 주 20시간 절약 기준)", color: C.green },
-    { num: "4+", unit: "명 청년 투입", title: "진짜 청년 일자리 창출", desc: "AI 툴은 다루지만 실전 포트폴리오가 필요한 청년(AX 빌더) 4명 이상에게, 진짜 현장에서 일하며 성장할 수 있는 완벽한 기회를 제공합니다.", color: C.cyan },
-    { num: "66", unit: "% 재투자", title: "건강한 생태계 선순환", desc: "우리가 벌어들인 이익의 3분의 2 이상은 약자를 돕는 기술을 연구하고, 청년들을 교육하는 데 다시 사용됩니다.", color: C.purple }
-  ];
   const colors = [C.green, C.cyan, C.purple];
-  const impacts = (cfg?.cards?.length > 0 ? cfg.cards : defaultImpacts).map((c, i) => ({ ...c, color: colors[i] }));
+  const impacts = CONTENT.impact.cards.map((c, i) => ({ ...c, color: colors[i] }));
 
   return (
     <section id="impact" ref={ref} style={{ padding: "120px 20px", maxWidth: 1000, margin: "0 auto" }}>
       <SectionLabel num="04" text="Social Impact" />
       <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 48, wordBreak: "keep-all" }}>
-        {cfg?.headingLine1 || "우리가 시스템을 바꿀 때,"}<br />
-        <span style={{ color: C.cyan }}>{cfg?.headingLine2 || "이만큼 변화"}</span>합니다.
+        {CONTENT.impact.headingLine1}<br />
+        <span style={{ color: C.cyan }}>{CONTENT.impact.headingLine2}</span>합니다.
       </h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="impact-grid">
         {impacts.map((imp, i) => (
@@ -730,30 +779,29 @@ function ImpactSection() {
 }
 
 function AboutSection() {
-  const cfg = useSiteConfig()?.about;
   const [ref, visible] = useInView();
   return (
     <section id="about" ref={ref} style={{ padding: "120px 20px", background: C.bgSoft, borderTop: `1px solid ${C.border}` }}>
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
         <SectionLabel num="05" text="About Us" />
         <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
-          {cfg?.headingLine1 || "우리는 10년 넘게 이 바닥에서 굴러본"}<br />
-          <span style={{ color: C.orange }}>{cfg?.headingLine2 || "진짜 내부자들"}</span>입니다.
+          {CONTENT.about.headingLine1}<br />
+          <span style={{ color: C.orange }}>{CONTENT.about.headingLine2}</span>입니다.
         </h2>
         <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all", maxWidth: 720 }}>
-          {cfg?.subtext || "수백, 수천만 원짜리 번지르르한 시스템을 팔려는 것이 아닙니다.\n저희 역시 임팩트 생태계에서 10년 이상 직접 몸으로 부딪히며, 서류 작업에 치여 정작 중요한 가치를 놓쳤던 뼈아픈 경험이 있습니다."}
+          {CONTENT.about.subtext}
         </p>
 
         <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, padding: 40, position: "relative" }}>
           <div style={{ fontFamily: MONO, fontSize: 13, color: C.orange, fontWeight: 700, marginBottom: 24, letterSpacing: ".1em" }}># OUR_PHILOSOPHY : UN-LEARNING</div>
           <h3 style={{ fontFamily: SANS, fontSize: 24, fontWeight: 700, color: C.textBright, marginBottom: 16 }}>
-            "{cfg?.philosophyQuote || "채우기 위해서는 먼저 비워야 합니다."}"
+            "{CONTENT.about.philosophyQuote}"
           </h3>
           <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 300, color: C.textDim, lineHeight: 1.8, wordBreak: "keep-all", marginBottom: 24 }}>
-            {cfg?.philosophyBody || "조직의 혁신은 새로운 툴을 억지로 배우는 것에서 시작하지 않습니다. 기존의 비효율적인 관행을 먼저 잊어버리는 것(Unlearning)이 핵심입니다. 우리는 대표님과 핵심 멤버 3인의 깊은 현장 경험을 바탕으로, 조직에 어울리지 않는 '오버스펙 기술' 대신, 현장에서 지금 당장 가볍게 쓸 수 있는 '적정 기술'만을 엄선하여 직접 설치하고 운전해 드립니다."}
+            {CONTENT.about.philosophyBody}
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, paddingTop: 20, borderTop: `1px dashed ${C.border}` }}>
-            {["10년차 생태계 경험", "AI 적정기술 설계", "정부지원금 매칭 전문가", "청년 AX 빌더 투입"].map(tag => (
+            {CONTENT.about.tags.map(tag => (
               <span key={tag} style={{ background: `${C.orange}11`, color: C.orange, border: `1px solid ${C.orange}33`, padding: "6px 12px", borderRadius: 4, fontFamily: SANS, fontSize: 13, fontWeight: 500 }}>
                 {tag}
               </span>
@@ -766,18 +814,17 @@ function AboutSection() {
 }
 
 function ContactSection() {
-  const cfg = useSiteConfig()?.contact;
   const [ref, visible] = useInView();
   return (
     <section id="contact" ref={ref} style={{ padding: "140px 20px", borderTop: `1px solid ${C.border}` }}>
       <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
         <div style={{ fontFamily: MONO, fontSize: 12, color: C.green, letterSpacing: ".2em", textTransform: "uppercase", marginBottom: 20 }}>// Action Required</div>
         <h2 style={{ fontFamily: SANS, fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700, color: C.textBright, lineHeight: 1.25, marginBottom: 24, wordBreak: "keep-all" }}>
-          {cfg?.headingLine1 || "당신의 조직은 지금,"}<br />
-          <span style={{ color: C.green }}>{cfg?.headingLine2 || "어떤 업무가 가장 힘드신가요?"}</span>
+          {CONTENT.contact.headingLine1}<br />
+          <span style={{ color: C.green }}>{CONTENT.contact.headingLine2}</span>
         </h2>
         <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all" }}>
-          {cfg?.subtext || '"회계 정산이 너무 오래 걸려요." "지원금 결과 보고서 쓰느라 밤을 새워요."\n가장 고민인 업무를 남겨주세요. 10년 차 전문가가 직접 연락드려 가장 확실하고, 비용 부담 없는 해결책을 제안해 드립니다.'}
+          {CONTENT.contact.subtext}
         </p>
 
         <TerminalWindow title="request_partnership.sh" style={{ textAlign: "left", maxWidth: 600, margin: "0 auto" }}>
@@ -1011,7 +1058,6 @@ function NewsDetailView({ id, setView, posts }) {
    FOOTER
    ========================================================================== */
 function Footer() {
-  const cfg = useSiteConfig()?.footer;
   return (
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: "60px 28px 40px", background: C.bgCard }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
@@ -1020,11 +1066,11 @@ function Footer() {
             <span style={{ color: C.green }}>▲</span><span>unlearning<span style={{ color: C.textDim }}>_company</span></span>
           </div>
           <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 300, color: C.textDim, lineHeight: 1.8, maxWidth: 400 }}>
-            {cfg?.tagline || "세상을 바꾸는 사람들이 미션에만 몰입할 수 있도록,\nAI와 청년 전문가가 복잡한 행정 업무를 대신 해결합니다."}
+            {CONTENT.footer.tagline}
           </div>
         </div>
         <div style={{ fontFamily: MONO, fontSize: 13, color: C.textDim, lineHeight: 1.8, textAlign: "right" }}>
-          <div>{cfg?.email || "hello@unlearning.co"}</div>
+          <div>{CONTENT.footer.email}</div>
           <div>B2B2G / CSR Partnership</div>
         </div>
       </div>
@@ -1043,14 +1089,10 @@ function App() {
   const [view, setView] = useState('home');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [siteConfig, setSiteConfig] = useState(null);
 
   useEffect(() => {
-    Promise.all([fetchSanityPosts(), fetchSiteConfig()])
-      .then(([postsData, config]) => {
-        setPosts(postsData);
-        setSiteConfig(config);
-      })
+    fetchSanityPosts()
+      .then(data => setPosts(data))
       .catch(err => {
         console.error('Sanity fetch error:', err);
         setPosts(localPosts);
@@ -1070,13 +1112,13 @@ function App() {
   };
 
   return (
-    <SiteConfigContext.Provider value={siteConfig}>
+    <div>
       <Nav view={view} setView={setView} scrollToSection={scrollToSection} />
       {view === 'home' && <MainView />}
       {view === 'news' && <NewsListView setView={setView} posts={posts} loading={loading} />}
       {typeof view === 'object' && view.type === 'post' && <NewsDetailView id={view.id} setView={setView} posts={posts} />}
       <Footer />
-    </SiteConfigContext.Provider>
+    </div>
   );
 }
 
