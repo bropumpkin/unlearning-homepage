@@ -107,6 +107,56 @@ const newsData = [
 ];
 
 /* ==========================================================================
+   SANITY CONFIG
+   ========================================================================== */
+const SANITY_PROJECT_ID = '77kdc69b';
+const SANITY_DATASET = 'production';
+
+const localPosts = newsData.map(item => ({
+  _id: String(item.id),
+  title: item.title,
+  publishedAt: item.date.replace(/\./g, '-'),
+  category: item.category,
+  mainImage: null,
+  _imageBg: item.imageBg,
+  body: null,
+  _localContent: item.content,
+  _localSummary: item.summary,
+  _isLocal: true,
+}));
+
+async function fetchSanityPosts() {
+  const query = encodeURIComponent(
+    '*[_type == "post"] | order(publishedAt desc) {_id, title, publishedAt, "category": categories[0]->title, mainImage, body}'
+  );
+  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${query}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data.result && data.result.length > 0) ? data.result : localPosts;
+}
+
+function getSanityImageUrl(image, width = 800) {
+  if (!image?.asset?._ref) return null;
+  const ref = image.asset._ref
+    .replace(/^image-/, '')
+    .replace(/-(jpg|jpeg|png|gif|webp|svg)$/, '.$1');
+  return `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${ref}?w=${width}&auto=format`;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getSummary(body) {
+  if (!body) return '';
+  const first = body.find(b => b._type === 'block' && b.children);
+  if (!first) return '';
+  return first.children.map(c => c.text || '').join('');
+}
+
+/* ==========================================================================
    CURRICULUM DATA
    ========================================================================== */
 const MODULES = [
@@ -733,13 +783,108 @@ function ContactSection() {
 }
 
 /* ==========================================================================
+   PORTABLE TEXT RENDERER
+   ========================================================================== */
+function PortableText({ blocks }) {
+  if (!blocks) return null;
+  return blocks.map((block, i) => {
+    if (block._type === 'image') {
+      const url = getSanityImageUrl(block, 1000);
+      if (!url) return null;
+      return <img key={i} src={url} alt="" style={{ maxWidth: '100%', borderRadius: 8, margin: '24px 0', display: 'block' }} />;
+    }
+    if (block._type === 'youtube') {
+      const videoId = block.url?.match(/(?:v=|youtu\.be\/)([^&?/]+)/)?.[1];
+      if (!videoId) return null;
+      return (
+        <div key={i} style={{ position: 'relative', paddingBottom: '56.25%', height: 0, margin: '24px 0' }}>
+          <iframe src={`https://www.youtube.com/embed/${videoId}`}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0, borderRadius: 8 }}
+            allowFullScreen />
+        </div>
+      );
+    }
+    if (block._type !== 'block') return null;
+    const children = (block.children || []).map((child, j) => {
+      const text = child.text || '';
+      if (!text) return null;
+      const marks = child.marks || [];
+      const linkKey = marks.find(m => block.markDefs?.find(d => d._key === m && d._type === 'link'));
+      if (linkKey) {
+        const def = block.markDefs.find(d => d._key === linkKey);
+        return <a key={j} href={def.href} target="_blank" rel="noopener noreferrer" style={{ color: C.green, textDecoration: 'underline' }}>{text}</a>;
+      }
+      if (marks.includes('strong')) return <strong key={j}>{text}</strong>;
+      if (marks.includes('em')) return <em key={j}>{text}</em>;
+      if (marks.includes('underline')) return <span key={j} style={{ textDecoration: 'underline' }}>{text}</span>;
+      return <span key={j}>{text}</span>;
+    });
+    const base = { fontFamily: SANS, lineHeight: 1.9, marginBottom: 20, wordBreak: 'keep-all' };
+    switch (block.style) {
+      case 'h1': return <h1 key={i} style={{ ...base, fontSize: 32, fontWeight: 700, color: C.textBright, marginTop: 40 }}>{children}</h1>;
+      case 'h2': return <h2 key={i} style={{ ...base, fontSize: 26, fontWeight: 700, color: C.textBright, marginTop: 32 }}>{children}</h2>;
+      case 'h3': return <h3 key={i} style={{ ...base, fontSize: 21, fontWeight: 700, color: C.textBright, marginTop: 28 }}>{children}</h3>;
+      case 'h4': return <h4 key={i} style={{ ...base, fontSize: 18, fontWeight: 700, color: C.textBright, marginTop: 24 }}>{children}</h4>;
+      case 'blockquote': return <blockquote key={i} style={{ ...base, borderLeft: `4px solid ${C.green}`, paddingLeft: 24, color: C.textDim, fontStyle: 'italic', margin: '24px 0' }}>{children}</blockquote>;
+      default: return <p key={i} style={{ ...base, color: C.text }}>{children}</p>;
+    }
+  });
+}
+
+/* ==========================================================================
    VIEWS - 2. NEWS LIST (게시판 목록 페이지)
    ========================================================================== */
-function NewsListView({ setView }) {
+function NewsCard({ post, setView }) {
+  const [hover, setHover] = useState(false);
+  const imgUrl = getSanityImageUrl(post.mainImage);
+  return (
+    <article
+      onClick={() => { setView({ type: 'post', id: post._id }); window.scrollTo(0,0); }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        background: C.bgCard, border: `1px solid ${hover ? C.green : C.border}`, borderRadius: 10, overflow: "hidden",
+        cursor: "pointer", transition: "all 0.3s ease", transform: hover ? "translateY(-6px)" : "none",
+        boxShadow: hover ? `0 12px 24px rgba(0,0,0,0.5), 0 0 0 1px ${C.green}44` : "none"
+      }}
+    >
+      <div style={{ width: "100%", height: 180, borderBottom: `1px solid ${C.border}`, position: "relative", overflow: "hidden",
+        background: imgUrl ? "transparent" : (post._imageBg || "linear-gradient(135deg, #111 0%, #1a1f26 100%)") }}>
+        {imgUrl
+          ? <img src={imgUrl} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontFamily: MONO, fontSize: 12, color: C.borderBright, opacity: 0.5, letterSpacing: ".1em" }}>{post.category}</div>
+        }
+        <div style={{ position: "absolute", inset: 0, background: `${C.green}22`, opacity: hover ? 1 : 0, transition: "opacity 0.3s" }} />
+      </div>
+      <div style={{ padding: "24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: C.green, background: `${C.green}11`, padding: "4px 8px", borderRadius: 4 }}>
+            {post.category || '소식'}
+          </span>
+          <span style={{ fontFamily: MONO, fontSize: 12, color: C.textFaint }}>{formatDate(post.publishedAt)}</span>
+        </div>
+        <h3 style={{ fontFamily: SANS, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 12, lineHeight: 1.4, wordBreak: "keep-all" }}>
+          {post.title}
+        </h3>
+        <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 300, color: C.textDim, lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {post._isLocal ? post._localSummary : getSummary(post.body)}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+function NewsListView({ setView, posts, loading }) {
+  if (loading) return (
+    <div style={{ paddingTop: "120px", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ fontFamily: MONO, fontSize: 14, color: C.green }}>$ loading posts...</div>
+    </div>
+  );
+
   return (
     <div style={{ paddingTop: "120px", paddingBottom: "120px", minHeight: "100vh", animation: "fadeInUp 0.5s ease" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 20px" }}>
-        
+
         <div style={{ fontFamily: MONO, fontSize: 12, color: C.green, letterSpacing: ".2em", textTransform: "uppercase", marginBottom: 16 }}>
           // Board
         </div>
@@ -750,45 +895,17 @@ function NewsListView({ setView }) {
           현장에서 부딪히며 만들어낸 생생한 인사이트와 소식을 전합니다.
         </p>
 
-        {/* 3단 그리드 카드 영역 */}
-        <div className="news-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-          {newsData.map((news) => {
-            const [hover, setHover] = useState(false);
-            return (
-              <article 
-                key={news.id} 
-                onClick={() => { setView({ type: 'post', id: news.id }); window.scrollTo(0,0); }}
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)}
-                style={{ 
-                  background: C.bgCard, border: `1px solid ${hover ? C.green : C.border}`, borderRadius: 10, overflow: "hidden",
-                  cursor: "pointer", transition: "all 0.3s ease", transform: hover ? "translateY(-6px)" : "none",
-                  boxShadow: hover ? `0 12px 24px rgba(0,0,0,0.5), 0 0 0 1px ${C.green}44` : "none"
-                }}
-              >
-                <div style={{ width: "100%", height: 180, background: news.imageBg, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-                  <div style={{ fontFamily: MONO, fontSize: 24, color: C.borderBright, opacity: 0.5, letterSpacing: "2px" }}>IMG_0{news.id}.png</div>
-                  <div style={{ position: "absolute", inset: 0, background: `${C.green}22`, opacity: hover ? 1 : 0, transition: "opacity 0.3s" }} />
-                </div>
-                
-                <div style={{ padding: "24px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                    <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: C.green, background: `${C.green}11`, padding: "4px 8px", borderRadius: 4 }}>
-                      {news.category}
-                    </span>
-                    <span style={{ fontFamily: MONO, fontSize: 12, color: C.textFaint }}>{news.date}</span>
-                  </div>
-                  <h3 style={{ fontFamily: SANS, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 12, lineHeight: 1.4, wordBreak: "keep-all" }}>
-                    {news.title}
-                  </h3>
-                  <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 300, color: C.textDim, lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                    {news.summary}
-                  </p>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+        {posts.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "80px 0", fontFamily: MONO, fontSize: 14, color: C.textDim }}>
+            아직 게시된 글이 없습니다.
+          </div>
+        ) : (
+          <div className="news-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+            {posts.map((post) => (
+              <NewsCard key={post._id} post={post} setView={setView} />
+            ))}
+          </div>
+        )}
       </div>
       <style>{`
         @media (max-width: 900px) { .news-grid { grid-template-columns: repeat(2, 1fr) !important; } }
@@ -801,16 +918,17 @@ function NewsListView({ setView }) {
 /* ==========================================================================
    VIEWS - 3. NEWS DETAIL (게시판 상세 페이지)
    ========================================================================== */
-function NewsDetailView({ id, setView }) {
-  // 데이터에서 해당 게시글 찾기
-  const post = newsData.find(item => item.id === id);
+function NewsDetailView({ id, setView, posts }) {
+  const post = posts.find(p => p._id === id);
 
   if (!post) return <div style={{ padding: "120px 20px", textAlign: "center", color: C.textBright }}>게시글을 찾을 수 없습니다.</div>;
+
+  const imgUrl = getSanityImageUrl(post.mainImage, 1200);
 
   return (
     <div style={{ paddingTop: "120px", paddingBottom: "120px", minHeight: "100vh", animation: "fadeInUp 0.4s ease" }}>
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 20px" }}>
-        
+
         {/* 뒤로 가기 버튼 */}
         <button onClick={() => { setView('news'); window.scrollTo(0,0); }} style={{
           background: "none", border: "none", color: C.textDim, fontFamily: MONO, fontSize: 13,
@@ -823,28 +941,30 @@ function NewsDetailView({ id, setView }) {
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.green, background: `${C.green}11`, border: `1px solid ${C.green}44`, padding: "4px 10px", borderRadius: 4 }}>
-              {post.category}
+              {post.category || '소식'}
             </span>
-            <span style={{ fontFamily: MONO, fontSize: 14, color: C.textFaint }}>{post.date}</span>
+            <span style={{ fontFamily: MONO, fontSize: 14, color: C.textFaint }}>{formatDate(post.publishedAt)}</span>
           </div>
           <h1 style={{ fontFamily: SANS, fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 900, color: C.textBright, lineHeight: 1.3, wordBreak: "keep-all" }}>
             {post.title}
           </h1>
         </div>
 
-        {/* 큰 썸네일 (더미) */}
-        <div style={{ width: "100%", height: 360, background: post.imageBg, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 48, border: `1px solid ${C.border}` }}>
-          <div style={{ fontFamily: MONO, fontSize: 32, color: C.borderBright, opacity: 0.5 }}>IMG_0{post.id}_FULL.png</div>
-        </div>
+        {/* 썸네일 */}
+        {imgUrl && (
+          <img src={imgUrl} alt={post.title} style={{ width: "100%", height: 360, objectFit: "cover", borderRadius: 12, marginBottom: 48, border: `1px solid ${C.border}`, display: "block" }} />
+        )}
 
-        {/* 본문 텍스트 렌더링 (줄바꿈 반영) */}
-        <div style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.text, lineHeight: 1.9, wordBreak: "keep-all" }}>
-          {post.content.split('\n').map((line, idx) => (
-            <p key={idx} style={{ marginBottom: line.trim() === '' ? 0 : 24 }}>
-              {line}
-              {line.trim() === '' && <br/>}
-            </p>
-          ))}
+        {/* 본문 */}
+        <div>
+          {post._isLocal
+            ? post._localContent?.split('\n').map((line, i) =>
+                line.trim()
+                  ? <p key={i} style={{ fontFamily: SANS, fontSize: 16, color: C.text, lineHeight: 1.9, marginBottom: 16, wordBreak: 'keep-all' }}>{line}</p>
+                  : <br key={i} />
+              )
+            : <PortableText blocks={post.body} />
+          }
         </div>
         
         <hr style={{ border: "none", borderTop: `1px dashed ${C.border}`, margin: "60px 0" }} />
@@ -896,14 +1016,23 @@ function Footer() {
    APP EXPORT (라우팅 컨트롤러)
    ========================================================================== */
 function App() {
-  // view 상태: 'home', 'news', 또는 { type: 'post', id: 1 } 객체
   const [view, setView] = useState('home');
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // 메인 페이지 내부 앵커 스크롤 함수
+  useEffect(() => {
+    fetchSanityPosts()
+      .then(data => setPosts(data))
+      .catch(err => {
+        console.error('Sanity fetch error:', err);
+        setPosts(localPosts);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   const scrollToSection = (id) => {
     if (view !== 'home') {
       setView('home');
-      // 뷰가 변경되어 렌더링될 때까지 기다렸다가 스크롤
       setTimeout(() => {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -915,12 +1044,9 @@ function App() {
   return (
     <div>
       <Nav view={view} setView={setView} scrollToSection={scrollToSection} />
-      
-      {/* 뷰 라우팅 */}
       {view === 'home' && <MainView />}
-      {view === 'news' && <NewsListView setView={setView} />}
-      {typeof view === 'object' && view.type === 'post' && <NewsDetailView id={view.id} setView={setView} />}
-      
+      {view === 'news' && <NewsListView setView={setView} posts={posts} loading={loading} />}
+      {typeof view === 'object' && view.type === 'post' && <NewsDetailView id={view.id} setView={setView} posts={posts} />}
       <Footer />
     </div>
   );
