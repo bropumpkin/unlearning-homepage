@@ -536,7 +536,7 @@ function HeroSection() {
           {CONTENT.hero.headingLine1}<br />
           <span style={{ color: C.green }}>{CONTENT.hero.headingLine2}</span>
         </h1>
-        <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 2vw, 18px)", fontWeight: 300, color: C.textDim, marginTop: 20, lineHeight: 1.8, wordBreak: "keep-all", maxWidth: 640, margin: "20px auto 0" }}>
+        <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 2vw, 18px)", fontWeight: 300, color: C.textDim, marginTop: 20, lineHeight: 1.8, wordBreak: "keep-all", maxWidth: 640, margin: "20px auto 0", whiteSpace: "pre-line" }}>
           {CONTENT.hero.subtext}
         </p>
       </div>
@@ -806,7 +806,7 @@ function AboutSection() {
           {CONTENT.about.headingLine1}<br />
           <span style={{ color: C.orange }}>{CONTENT.about.headingLine2}</span>입니다.
         </h2>
-        <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all", maxWidth: 720 }}>
+        <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all", maxWidth: 720, whiteSpace: "pre-line" }}>
           {CONTENT.about.subtext}
         </p>
 
@@ -906,7 +906,7 @@ function ContactSection() {
           {CONTENT.contact.headingLine1}<br />
           <span style={{ color: C.green }}>{CONTENT.contact.headingLine2}</span>
         </h2>
-        <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all" }}>
+        <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all", whiteSpace: "pre-line" }}>
           {CONTENT.contact.subtext}
         </p>
 
@@ -1154,7 +1154,7 @@ function Footer() {
           <div style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 12, display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ color: C.green }}>▲</span><span>unlearning<span style={{ color: C.textDim }}>_company</span></span>
           </div>
-          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 300, color: C.textDim, lineHeight: 1.8, maxWidth: 400 }}>
+          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 300, color: C.textDim, lineHeight: 1.8, maxWidth: 400, whiteSpace: "pre-line" }}>
             {CONTENT.footer.tagline}
           </div>
         </div>
