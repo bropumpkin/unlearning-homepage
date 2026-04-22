@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>언러닝컴퍼니 | Unlearning Company</title>
-  <meta name="description" content="세상을 바꾸는 일에만 집중하세요. 복잡한 서류 업무는 AI 전문가들이 직접 해결해 드립니다." />
+  <meta name="description" content="세상을 바꾸는 일에만 집중하세요 복잡한 서류 업무는 AI 전문가들이 직접 해결해 드립니다." />
   <meta property="og:title" content="언러닝컴퍼니 | Unlearning Company" />
   <meta property="og:description" content="임팩트 조직을 위한 AI 오퍼레이션 파트너" />
   <meta name="theme-color" content="#0a0a0a" />
@@ -107,6 +107,87 @@ const newsData = [
 ];
 
 /* ==========================================================================
+   CURRICULUM DATA
+   ========================================================================== */
+const MODULES = [
+  {
+    id: "A",
+    title: "일의 본질 정리 + 업무 흐름 재설계",
+    tagline: "'열심히'가 아니라 '중요한 일'에 시간이 가도록",
+    color: "#22d3ee",
+    items: [
+      { id: "A-1", title: "가치 지향적 생산성 마인드셋 워크샵", duration: "2-3h", desc: "효율보다 미션 기여도를 기준으로 일의 우선순위를 다시 세웁니다." },
+      { id: "A-2", title: "조직 업무 생산성 진단", duration: "1-2주", desc: "병목이 어디서 생기는지를 찾아, 줄일 수 있는 시간을 숫자로 보여드립니다." },
+      { id: "A-3", title: "업무 흐름 분해 워크샵", duration: "3-4h", desc: "개인의 '감'에 기대던 일을 누구나 따라할 수 있는 시스템으로 바꿉니다." },
+    ]
+  },
+  {
+    id: "B",
+    title: "AI/도구로 실무 시간을 바로 줄이는 적용 세션",
+    tagline: "지금 당장 시간을 돌려받으세요",
+    color: "#00ff88",
+    items: [
+      { id: "B-1", title: "구글워크스페이스 100% 활용", duration: "2-3h", desc: "폼–시트–메일을 연결해 입력/정리/안내를 한 번에 돌립니다." },
+      { id: "B-2", title: "맞춤형 AI 자료실 구축 (노트북LM)", duration: "2h", desc: "보고서·회의록·정책자료를 모아, 질문하면 근거까지 찾아주는 자료실로 만듭니다." },
+      { id: "B-3", title: "AI로 기획/운영 문서 초안 속도 올리기 (GEMINI)", duration: "2-3h", desc: "제안서·행사 기획·홍보 문구를 빈 문서에서 시작하지 않게 만들어 드립니다." },
+      { id: "B-4", title: "현장 기록을 보고서/콘텐츠로 자동 정리 (클로바노트)", duration: "1.5-2h", desc: "인터뷰·워크숍 녹음/영상이 그대로 자산이 되게 만듭니다." },
+      { id: "B-5", title: "지원사업/정책 정보 빠르게 고르기 (Perplexity)", duration: "1.5-2h", desc: "긴 공고문을 1분 요약 + 적합도 판별로 바꿔드립니다." },
+    ]
+  },
+  {
+    id: "C",
+    title: "우리 조직에 '남는' 내재화",
+    tagline: "팀이 스스로 쓸 수 있을 때까지",
+    color: "#a78bfa",
+    items: [
+      { id: "C-1", title: "우리 조직 맞춤형 '업무 비서' 만들기", duration: "2-4h", desc: "규정·매뉴얼·FAQ를 모아 질문하면 근거와 함께 답하는 내부 비서를 만듭니다." },
+      { id: "C-2", title: "반복 업무 자동화 (알림·기록·발송)", duration: "2-3h", desc: "요청이 들어오면 → 처리하고 → 결과를 남기는 흐름을 사람 손 없이 이어줍니다." },
+      { id: "C-3", title: "AI 해커톤 (짧게 몰입해서 작동하는 결과물 만들기)", duration: "1-2일", desc: "하루(또는 1박 2일)로 프로토타입을 완성합니다." },
+      { id: "C-4", title: "리더십을 위한 AI 의사결정 세션", duration: "2-3h", desc: "무엇부터, 어디까지, 어떤 기준으로 도입할지 90일 로드맵을 잡습니다." },
+    ]
+  }
+];
+
+const TRACKS = [
+  {
+    id: 1, persona: "신입/주니어 실무 전력화",
+    modules: ["A-1", "B-1", "B-3", "B-4"], duration: "9-11h",
+    desc: "매번 물어보며 처리하던 신규 멤버가 독립적으로 실무를 수행합니다.",
+    forWho: "팀장, 인사 담당자"
+  },
+  {
+    id: 2, persona: "운영/회계 백오피스 표준화",
+    modules: ["A-2", "B-1", "C-2"], duration: "10-13h",
+    desc: "월말마다 반복되던 재확인·누락·수정을 표준 프로세스로 끝냅니다.",
+    forWho: "운영 매니저, 회계 담당자"
+  },
+  {
+    id: 3, persona: "핵심 PM의 서류 과부하 해소",
+    modules: ["B-2", "B-3", "B-5"], duration: "7-10h",
+    desc: "자료 찾고 초안 잡는 시간을 크게 줄여, 기획 본연에 집중합니다.",
+    forWho: "사업 담당자, PM"
+  },
+  {
+    id: 4, persona: "조직 지식·매뉴얼 내재화",
+    modules: ["A-3", "C-1"], duration: "6-9h",
+    desc: "담당자가 바뀌어도 노하우가 조직에 남는 지식 체계를 만듭니다.",
+    forWho: "대표, 리더십"
+  },
+  {
+    id: 5, persona: "대표/리더의 AI 도입 의사결정",
+    modules: ["C-4", "A-2"], duration: "4-6h",
+    desc: "어디서부터 시작할지 몰랐다면, 90일 실행 계획으로 방향을 잡습니다.",
+    forWho: "대표, 이사"
+  },
+  {
+    id: 6, persona: "하루 집중 프로토타입 완성",
+    modules: ["A-3", "B-1", "C-3"], duration: "1-2일",
+    desc: "회의만 하고 끝나지 않습니다. 당일 작동하는 결과물이 나옵니다.",
+    forWho: "전 팀원"
+  }
+];
+
+/* ==========================================================================
    HOOKS & UTILS
    ========================================================================== */
 function useInView(threshold = 0.2) {
@@ -177,6 +258,7 @@ function Nav({ view, setView, scrollToSection }) {
   // 메뉴 리스트 (News는 별도 뷰로 분리)
   const menuLinks = [
     { name: 'Services', sectionId: 'services' },
+    { name: 'Curriculum', sectionId: 'curriculum' },
     { name: 'Impact', sectionId: 'impact' },
     { name: 'About', sectionId: 'about' }
   ];
@@ -241,6 +323,8 @@ function MainView() {
     <div style={{ animation: "fadeInUp 0.5s ease" }}>
       <HeroSection />
       <ServicesSection />
+      <CurriculumSection />
+      <RecommendedTracksSection />
       <ImpactSection />
       <AboutSection />
       <ContactSection />
@@ -394,6 +478,151 @@ function ServicesSection() {
   );
 }
 
+function CurriculumSection() {
+  const [ref, visible] = useInView();
+  const [openModule, setOpenModule] = useState("B");
+
+  const moduleColor = { A: "#22d3ee", B: "#00ff88", C: "#a78bfa" };
+
+  return (
+    <section id="curriculum" ref={ref} style={{ padding: "120px 20px", background: `linear-gradient(180deg, ${C.bgSoft} 0%, ${C.bg} 100%)`, borderTop: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+        <SectionLabel num="02" text="Curriculum" />
+        <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
+          진단부터 내재화까지,<br />
+          <span style={{ color: C.green }}>필요한 것만 골라 조합</span>합니다.
+        </h2>
+        <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all" }}>
+          3개 모듈, 12개 세션으로 구성됩니다. 조직 상황에 맞게 선택하고 조합할 수 있습니다.
+        </p>
+
+        {MODULES.map((mod) => (
+          <div key={mod.id} style={{
+            marginBottom: 12, borderRadius: 8, overflow: "hidden",
+            border: `1px solid ${openModule === mod.id ? mod.color + "66" : C.border}`,
+            borderLeft: `3px solid ${mod.color}`, transition: "border-color .2s"
+          }}>
+            <button
+              onClick={() => setOpenModule(o => o === mod.id ? null : mod.id)}
+              style={{
+                width: "100%", display: "flex", alignItems: "center", gap: 16,
+                padding: "20px 24px", background: openModule === mod.id ? mod.color + "08" : C.bgCard,
+                border: "none", cursor: "pointer", textAlign: "left", transition: "background .2s"
+              }}>
+              <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 700, color: mod.color, minWidth: 28 }}>{mod.id}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: SANS, fontSize: 17, fontWeight: 700, color: C.textBright, marginBottom: 4, wordBreak: "keep-all" }}>{mod.title}</div>
+                <div style={{ fontFamily: SANS, fontSize: 13, color: C.textDim }}>{mod.tagline}</div>
+              </div>
+              <span style={{ fontFamily: MONO, fontSize: 11, color: mod.color, background: mod.color + "15", border: `1px solid ${mod.color}44`, padding: "4px 10px", borderRadius: 4, whiteSpace: "nowrap" }}>{mod.items.length}개 세션</span>
+              <span style={{ color: C.textDim, fontSize: 13, marginLeft: 8, display: "inline-block", transform: openModule === mod.id ? "rotate(180deg)" : "none", transition: "transform .2s" }}>▼</span>
+            </button>
+
+            {openModule === mod.id && (
+              <div style={{ padding: "0 24px 24px", animation: "fadeInUp .3s ease" }} className="curriculum-grid">
+                {mod.items.map((item) => (
+                  <div key={item.id} style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, padding: "16px 20px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                      <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: mod.color }}>{item.id}</span>
+                      <span style={{ fontFamily: MONO, fontSize: 11, color: C.textDim, background: C.bgCard, border: `1px solid ${C.border}`, padding: "2px 8px", borderRadius: 3, whiteSpace: "nowrap", marginLeft: 8 }}>⏱ {item.duration}</span>
+                    </div>
+                    <div style={{ fontFamily: SANS, fontSize: 15, fontWeight: 700, color: C.textBright, marginBottom: 6, wordBreak: "keep-all" }}>{item.title}</div>
+                    <div style={{ fontFamily: SANS, fontSize: 13, color: C.textDim, lineHeight: 1.6, wordBreak: "keep-all" }}>{item.desc}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+
+        <div style={{ marginTop: 40, textAlign: "center" }}>
+          <p style={{ fontFamily: SANS, fontSize: 15, color: C.textDim, marginBottom: 16 }}>어떤 조합이 우리 조직에 맞을지 모르겠다면?</p>
+          <button onClick={() => document.getElementById('tracks')?.scrollIntoView({ behavior: 'smooth' })}
+            style={{ fontFamily: SANS, fontSize: 15, fontWeight: 700, color: C.green, background: "transparent", border: `1px solid ${C.green}44`, borderRadius: 6, padding: "12px 28px", cursor: "pointer" }}>
+            상황별 추천 조합 보기 ↓
+          </button>
+        </div>
+      </div>
+      <style>{`
+        .curriculum-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding-top: 16px; }
+        @media (max-width: 640px) { .curriculum-grid { grid-template-columns: 1fr !important; } }
+      `}</style>
+    </section>
+  );
+}
+
+function RecommendedTracksSection() {
+  const [ref, visible] = useInView();
+  const [hoveredId, setHoveredId] = useState(null);
+
+  const moduleColor = { A: "#22d3ee", B: "#00ff88", C: "#a78bfa" };
+
+  return (
+    <section id="tracks" ref={ref} style={{ padding: "120px 20px", borderTop: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+        <SectionLabel num="03" text="Recommended Tracks" />
+        <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
+          우리 조직 상황에 딱 맞는<br />
+          <span style={{ color: C.cyan }}>추천 트랙</span>을 확인하세요.
+        </h2>
+        <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.textDim, lineHeight: 1.8, marginBottom: 48, wordBreak: "keep-all" }}>
+          현장에서 자주 나오는 상황 기준으로 추천합니다. 필요하면 빼고 더할 수 있습니다.
+        </p>
+
+        <div className="tracks-grid">
+          {TRACKS.map((track, i) => (
+            <div key={track.id}
+              onMouseEnter={() => setHoveredId(track.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              style={{
+                background: C.bgCard,
+                border: `1px solid ${hoveredId === track.id ? C.green : C.border}`,
+                borderRadius: 10, padding: "28px 28px 24px",
+                opacity: visible ? 1 : 0,
+                transform: visible ? (hoveredId === track.id ? "translateY(-4px)" : "translateY(0)") : "translateY(24px)",
+                transition: `all .4s ease ${i * 0.08}s`
+              }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                <h3 style={{ fontFamily: SANS, fontSize: 17, fontWeight: 700, color: C.textBright, wordBreak: "keep-all", flex: 1, marginRight: 12, lineHeight: 1.4 }}>{track.persona}</h3>
+                <span style={{ fontFamily: MONO, fontSize: 11, color: C.textDim, background: C.bg, border: `1px solid ${C.border}`, padding: "4px 8px", borderRadius: 4, whiteSpace: "nowrap" }}>{track.duration}</span>
+              </div>
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+                {track.modules.map(mId => (
+                  <span key={mId} style={{
+                    fontFamily: MONO, fontSize: 11, fontWeight: 700,
+                    color: moduleColor[mId[0]],
+                    background: moduleColor[mId[0]] + "15",
+                    border: `1px solid ${moduleColor[mId[0]]}44`,
+                    padding: "3px 8px", borderRadius: 3
+                  }}>{mId}</span>
+                ))}
+              </div>
+
+              <p style={{ fontFamily: SANS, fontSize: 14, color: C.textDim, lineHeight: 1.6, marginBottom: 16, wordBreak: "keep-all" }}>{track.desc}</p>
+
+              <div style={{ fontFamily: MONO, fontSize: 11, color: C.textFaint }}>for: {track.forWho}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 56, textAlign: "center", padding: "40px 32px", background: `linear-gradient(90deg, ${C.green}0a, transparent, ${C.green}0a)`, border: `1px solid ${C.green}33`, borderRadius: 12 }}>
+          <p style={{ fontFamily: SANS, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 8, wordBreak: "keep-all" }}>나에게 맞는 트랙을 추천받고 싶다면</p>
+          <p style={{ fontFamily: SANS, fontSize: 15, color: C.textDim, marginBottom: 24, wordBreak: "keep-all" }}>30분만으로도 "어디가 가장 새는지"가 보입니다.</p>
+          <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            style={{ fontFamily: SANS, fontSize: 16, fontWeight: 700, color: C.bg, background: C.green, border: "none", borderRadius: 6, padding: "14px 36px", cursor: "pointer" }}>
+            무료 30분 커피챗 신청하기 →
+          </button>
+        </div>
+      </div>
+      <style>{`
+        .tracks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        @media (max-width: 768px) { .tracks-grid { grid-template-columns: 1fr !important; } }
+      `}</style>
+    </section>
+  );
+}
+
 function ImpactSection() {
   const [ref, visible] = useInView();
   const impacts = [
@@ -404,7 +633,7 @@ function ImpactSection() {
 
   return (
     <section id="impact" ref={ref} style={{ padding: "120px 20px", maxWidth: 1000, margin: "0 auto" }}>
-      <SectionLabel num="02" text="Social Impact" />
+      <SectionLabel num="04" text="Social Impact" />
       <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 48, wordBreak: "keep-all" }}>
         우리가 시스템을 바꿀 때,<br />세상은 <span style={{ color: C.cyan }}>이만큼 변화</span>합니다.
       </h2>
@@ -433,7 +662,7 @@ function AboutSection() {
   return (
     <section id="about" ref={ref} style={{ padding: "120px 20px", background: C.bgSoft, borderTop: `1px solid ${C.border}` }}>
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-        <SectionLabel num="03" text="About Us" />
+        <SectionLabel num="05" text="About Us" />
         <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
           우리는 10년 넘게 이 바닥에서 굴러본<br />
           <span style={{ color: C.orange }}>진짜 내부자들</span>입니다.
