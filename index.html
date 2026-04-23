@@ -576,12 +576,12 @@ function HeroSection() {
   const [resLines, setResLines] = useState([]);
   const [showContent, setShowContent] = useState(false);
 
-  const cmd = "$ deploy ai-experts --target='서류_업무' --mode='대신_해결'";
+  const cmd = "AI 전문가 투입 — 서류업무를 대신 해결합니다";
   const results = [
-    "> [INFO] 조직 업무 스캔 중...",
-    "> [WARN] 반복되는 영수증 정리 발견",
-    "> [WARN] 끝없는 보고서 작성 발견",
-    "> [OK] 10년차 전문가 & AI 투입 준비 완료.",
+    "→ 조직 업무 스캔 중...",
+    "→ 반복되는 영수증 정리 발견",
+    "→ 끝없는 보고서 작성 발견",
+    "✓ 10년차 전문가 & AI 투입 준비 완료.",
   ];
 
   useEffect(() => {
@@ -634,12 +634,14 @@ function HeroSection() {
         </p>
       </div>
 
-      <TerminalWindow title="init.sh — /unlearning" style={{ maxWidth: 680, zIndex: 1 }}>
-        <div style={{ fontFamily: MONO, fontSize: 14, lineHeight: 1.9 }}>
-          <span style={{ color: C.green }}>$</span> <span style={{ color: C.text }}>{cmdTyped.slice(1)}</span>{phase === 0 && <Cursor />}
+      <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, overflow: "hidden", width: "100%", maxWidth: 680, boxShadow: "0 24px 80px rgba(0,0,0,.6)", zIndex: 1 }}>
+        <div style={{ padding: "28px 24px", minHeight: 160 }}>
+          <div style={{ fontFamily: MONO, fontSize: 14, lineHeight: 1.9 }}>
+            <span style={{ color: C.text }}>{cmdTyped}</span>{phase === 0 && <Cursor />}
+          </div>
+          {resLines.map((line, i) => <TermLine key={i} text={line} showCursor={i === resLines.length - 1 && !showContent} />)}
         </div>
-        {resLines.map((line, i) => <TermLine key={i} text={line} showCursor={i === resLines.length - 1 && !showContent} />)}
-      </TerminalWindow>
+      </div>
     </section>
   );
 }
@@ -767,7 +769,6 @@ function ServicesSection() {
         </div>
 
         <div style={{ marginTop: 48, padding: "24px", background: `linear-gradient(90deg, ${C.green}11, transparent)`, border: `1px solid ${C.green}44`, borderLeft: `4px solid ${C.green}`, borderRadius: 8 }}>
-          <div style={{ fontFamily: MONO, fontSize: 13, color: C.green, fontWeight: 700, marginBottom: 10 }}>$ check-budget --matching="B2G/CSR"</div>
           <h4 style={{ fontFamily: SANS, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 8 }}>
             {CONTENT.services.budgetBox.heading}
           </h4>
@@ -1195,26 +1196,26 @@ function ContactSection() {
           {CONTENT.contact.subtext}
         </p>
 
-        <TerminalWindow title="request_partnership.sh" style={{ textAlign: "left", maxWidth: 600, margin: "0 auto" }}>
+        <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, overflow: "hidden", width: "100%", maxWidth: 600, margin: "0 auto", boxShadow: "0 24px 80px rgba(0,0,0,.6)" }}>
+          <div style={{ padding: "28px 24px" }}>
           <form onSubmit={(e) => { e.preventDefault(); if (!agreed) { alert('개인정보 수집 및 이용에 동의해 주세요.'); return; } alert('실제 서비스에서는 문의가 전송됩니다.'); }} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div>
-              <label style={{ display: "block", fontFamily: MONO, fontSize: 12, color: C.textFaint, marginBottom: 8 }}>$ input --name="단체명/기업명"</label>
+              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>단체명/기업명</label>
               <input type="text" required placeholder="예: 세상을바꾸는사람들" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
             </div>
             <div>
-              <label style={{ display: "block", fontFamily: MONO, fontSize: 12, color: C.textFaint, marginBottom: 8 }}>$ input --name="담당자 전화번호"</label>
+              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>담당자 전화번호</label>
               <input type="tel" required placeholder="예: 010-1234-5678" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
             </div>
             <div>
-              <label style={{ display: "block", fontFamily: MONO, fontSize: 12, color: C.textFaint, marginBottom: 8 }}>$ input --name="담당자 이메일"</label>
+              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>담당자 이메일</label>
               <input type="email" required placeholder="예: hello@example.com" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
             </div>
             <div>
-              <label style={{ display: "block", fontFamily: MONO, fontSize: 12, color: C.textFaint, marginBottom: 8 }}>$ input --name="언러닝컴퍼니와 함께 해결하고 싶은 문제"</label>
+              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>언러닝컴퍼니와 함께 해결하고 싶은 문제</label>
               <textarea required placeholder="예: 영수증 풀칠과 엑셀 정산 때문에 본업을 할 시간이 없습니다." rows={3} style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none", resize: "vertical" }} />
             </div>
             <div style={{ background: `${C.green}08`, border: `1px solid ${C.border}`, borderRadius: 6, padding: "16px" }}>
-              <div style={{ fontFamily: MONO, fontSize: 11, color: C.textFaint, marginBottom: 12 }}># 개인정보 수집 및 이용 동의</div>
               <p style={{ fontFamily: SANS, fontSize: 13, color: C.textDim, lineHeight: 1.7, marginBottom: 12 }}>
                 회사는 문의 처리를 위해 단체명/기업명, 담당자 전화번호, 담당자 이메일, 상담 내용을 수집하며, 상담 완료 후 3년간 보유합니다.{" "}
                 <button type="button" onClick={() => setPrivacyOpen(true)} style={{ background: "none", border: "none", color: C.green, fontFamily: SANS, fontSize: 13, cursor: "pointer", textDecoration: "underline", padding: 0 }}>
@@ -1229,9 +1230,10 @@ function ContactSection() {
             <button type="submit" style={{ marginTop: 10, width: "100%", padding: "16px", background: C.green, color: C.bg, border: "none", borderRadius: 6, fontFamily: SANS, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "opacity .2s" }} onMouseEnter={e=>e.target.style.opacity=0.8} onMouseLeave={e=>e.target.style.opacity=1}>
               문의하기 (Enter)
             </button>
-            <div style={{ textAlign: "center", fontFamily: MONO, fontSize: 11, color: C.textFaint, marginTop: 8 }}># 진단 결과는 PDF로 제공되며, 상담 비용은 무료입니다.</div>
+            <div style={{ textAlign: "center", fontFamily: SANS, fontSize: 12, color: C.textFaint, marginTop: 8 }}>진단 결과는 PDF로 제공되며, 상담 비용은 무료입니다.</div>
           </form>
-        </TerminalWindow>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1332,7 +1334,7 @@ function NewsCard({ post, setView }) {
 function NewsListView({ setView, posts, loading }) {
   if (loading) return (
     <div style={{ paddingTop: "120px", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ fontFamily: MONO, fontSize: 14, color: C.green }}>$ loading posts...</div>
+      <div style={{ fontFamily: SANS, fontSize: 14, color: C.textDim }}>불러오는 중...</div>
     </div>
   );
 
@@ -1450,7 +1452,7 @@ function Footer() {
       </div>
       <div className="footer-bottom" style={{ maxWidth: 1000, margin: "60px auto 0", paddingTop: 24, borderTop: `1px dashed ${C.border}`, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, fontFamily: MONO, fontSize: 11, color: C.textFaint }}>
         <div>© 2026 unlearning company. All rights reserved.</div>
-        <div>$ echo "세상을 바꾸는 일에만 집중하세요."</div>
+        <div>세상을 바꾸는 일에만 집중하세요.</div>
       </div>
     </footer>
   );
