@@ -492,7 +492,7 @@ function Nav({ view, setView, scrollToSection }) {
             onMouseEnter={e => e.target.style.color = C.green}
             onMouseLeave={e => { if(view !== 'news' && !(typeof view === 'object' && view.type === 'post')) e.target.style.color = C.textDim; }}
           >
-            News
+            Blog
           </button>
         </div>
 
@@ -538,7 +538,7 @@ function Nav({ view, setView, scrollToSection }) {
             fontFamily: MONO, fontSize: 22, color: C.textBright, letterSpacing: "0.05em",
             padding: "12px 0", width: "100%", textAlign: "center"
           }}>
-            News
+            Blog
           </button>
           <button onClick={() => { setMenuOpen(false); setTimeout(() => scrollToSection('contact'), 100); }} style={{
             marginTop: 24, fontFamily: MONO, fontSize: 15, color: C.green,
@@ -1346,7 +1346,7 @@ function NewsListView({ setView, posts, loading }) {
           // Board
         </div>
         <h1 style={{ fontFamily: SANS, fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 900, color: C.textBright, marginBottom: 16 }}>
-          News & Activity
+          Blog
         </h1>
         <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 300, color: C.textDim, marginBottom: 60, lineHeight: 1.6 }}>
           현장에서 부딪히며 만들어낸 생생한 인사이트와 소식을 전합니다.
