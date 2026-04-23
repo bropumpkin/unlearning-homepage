@@ -441,10 +441,10 @@ function Nav({ view, setView, scrollToSection }) {
   }, [menuOpen]);
 
   const menuLinks = [
-    { name: 'Services', sectionId: 'services' },
-    { name: 'Curriculum', sectionId: 'curriculum' },
-    { name: 'Impact', sectionId: 'impact' },
-    { name: 'About', sectionId: 'about' },
+    { name: 'Services',  sectionId: 'services' },
+    { name: 'Programs',  viewId: 'curriculum' },
+    { name: 'Impact',    sectionId: 'impact' },
+    { name: 'About',     sectionId: 'about' },
   ];
 
   const handleMobileNav = (sectionId) => {
@@ -467,17 +467,23 @@ function Nav({ view, setView, scrollToSection }) {
         </div>
 
         <div className="nav-links" style={{ display: "flex", gap: "36px", alignItems: "center" }}>
-          {menuLinks.map(link => (
-            <button key={link.name} onClick={() => scrollToSection(link.sectionId)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontFamily: MONO, fontSize: 13, color: C.textDim, transition: "color .2s", letterSpacing: "0.05em"
-            }}
-            onMouseEnter={e => e.target.style.color = C.green}
-            onMouseLeave={e => e.target.style.color = C.textDim}
-            >
-              {link.name}
-            </button>
-          ))}
+          {menuLinks.map(link => {
+            const isActive = link.viewId ? view === link.viewId : false;
+            const handleClick = link.viewId
+              ? () => { setView(link.viewId); window.scrollTo(0, 0); }
+              : () => scrollToSection(link.sectionId);
+            return (
+              <button key={link.name} onClick={handleClick} style={{
+                background: "none", border: "none", cursor: "pointer",
+                fontFamily: MONO, fontSize: 13, color: isActive ? C.green : C.textDim, transition: "color .2s", letterSpacing: "0.05em"
+              }}
+              onMouseEnter={e => e.target.style.color = C.green}
+              onMouseLeave={e => { if (!isActive) e.target.style.color = C.textDim; }}
+              >
+                {link.name}
+              </button>
+            );
+          })}
           <button onClick={() => { setView('news'); window.scrollTo(0,0); }} style={{
               background: "none", border: "none", cursor: "pointer",
               fontFamily: MONO, fontSize: 13, color: view === 'news' || (typeof view === 'object' && view.type === 'post') ? C.green : C.textDim, transition: "color .2s", letterSpacing: "0.05em"
@@ -512,15 +518,20 @@ function Nav({ view, setView, scrollToSection }) {
           background: "rgba(10,10,10,0.97)",
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12
         }}>
-          {menuLinks.map(link => (
-            <button key={link.name} onClick={() => handleMobileNav(link.sectionId)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontFamily: MONO, fontSize: 22, color: C.textBright, letterSpacing: "0.05em",
-              padding: "12px 0", width: "100%", textAlign: "center"
-            }}>
-              {link.name}
-            </button>
-          ))}
+          {menuLinks.map(link => {
+            const handleClick = link.viewId
+              ? () => { setMenuOpen(false); setView(link.viewId); window.scrollTo(0, 0); }
+              : () => handleMobileNav(link.sectionId);
+            return (
+              <button key={link.name} onClick={handleClick} style={{
+                background: "none", border: "none", cursor: "pointer",
+                fontFamily: MONO, fontSize: 22, color: C.textBright, letterSpacing: "0.05em",
+                padding: "12px 0", width: "100%", textAlign: "center"
+              }}>
+                {link.name}
+              </button>
+            );
+          })}
           <button onClick={() => { setMenuOpen(false); setView('news'); window.scrollTo(0,0); }} style={{
             background: "none", border: "none", cursor: "pointer",
             fontFamily: MONO, fontSize: 22, color: C.textBright, letterSpacing: "0.05em",
@@ -550,8 +561,6 @@ function MainView() {
       <HeroSection />
       <ProblemSection />
       <ServicesSection />
-      <CurriculumSection />
-      <RecommendedTracksSection />
       <ImpactSection />
       <AboutSection />
       <ContactSection />
@@ -609,7 +618,7 @@ function HeroSection() {
       }} />
 
       <div style={{
-        textAlign: "center", opacity: showContent ? 1 : 0, transform: showContent ? "translateY(0)" : "translateY(16px)", transition: "all .8s ease", marginBottom: 40, zIndex: 1
+        textAlign: "center", animation: "fadeInUp 0.8s ease both", marginBottom: 40, zIndex: 1
       }}>
         <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 4, marginBottom: 24, padding: "10px 20px", border: `1px solid ${C.green}44`, borderRadius: 8, background: `${C.green}08` }}>
           <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.green, letterSpacing: ".01em" }}>{CONTENT.hero.tagline1}</span>
@@ -819,7 +828,7 @@ function CurriculumSection() {
   );
 }
 
-function RecommendedTracksSection() {
+function RecommendedTracksSection({ setView }) {
   const [ref, visible] = useInView();
   const [hoveredId, setHoveredId] = useState(null);
 
@@ -875,13 +884,32 @@ function RecommendedTracksSection() {
         <div style={{ marginTop: 56, textAlign: "center", padding: "40px 32px", background: `linear-gradient(90deg, ${C.green}0a, transparent, ${C.green}0a)`, border: `1px solid ${C.green}33`, borderRadius: 12 }}>
           <p style={{ fontFamily: SANS, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 8, wordBreak: "keep-all" }}>나에게 맞는 트랙을 추천받고 싶다면</p>
           <p style={{ fontFamily: SANS, fontSize: 15, color: C.textDim, marginBottom: 24, wordBreak: "keep-all" }}>30분만으로도 "어디가 가장 새는지"가 보입니다.</p>
-          <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+          <button onClick={() => {
+              if (setView) {
+                setView('home');
+                setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100);
+              } else {
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
             style={{ fontFamily: SANS, fontSize: 16, fontWeight: 700, color: C.bg, background: C.green, border: "none", borderRadius: 6, padding: "14px 36px", cursor: "pointer" }}>
-            무료 30분 커피챗 신청하기 →
+            문의하기 →
           </button>
         </div>
       </div>
     </section>
+  );
+}
+
+/* ==========================================================================
+   VIEWS - 4. CURRICULUM (프로그램 페이지)
+   ========================================================================== */
+function CurriculumView({ setView }) {
+  return (
+    <div style={{ paddingTop: "80px", minHeight: "100vh", animation: "fadeInUp 0.5s ease" }}>
+      <CurriculumSection />
+      <RecommendedTracksSection setView={setView} />
+    </div>
   );
 }
 
@@ -1439,6 +1467,7 @@ function App() {
     <div>
       <Nav view={view} setView={setView} scrollToSection={scrollToSection} />
       {view === 'home' && <MainView />}
+      {view === 'curriculum' && <CurriculumView setView={setView} />}
       {view === 'news' && <NewsListView setView={setView} posts={posts} loading={loading} />}
       {typeof view === 'object' && view.type === 'post' && <NewsDetailView id={view.id} setView={setView} posts={posts} />}
       <Footer />
