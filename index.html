@@ -114,11 +114,34 @@ const CONTENT = {
     subtext: "매일 반복되는 복잡한 서류 작업과 영수증 정리에 지치셨나요?\n언러닝컴퍼니가 그 시간을 줄여드리겠습니다",
   },
 
+  // ① 문제 섹션
+  problem: {
+    headingLine1: "미션을 이루기에도 바쁜데,",
+    headingLine2: "잡무까지 쌓이고 있지 않나요?",
+    items: [
+      {
+        num: "01",
+        title: "영수증 정리, 보고서 쓰기… 중요한 일은 계속 뒤로 밀립니다",
+        desc: "정부 지원금 정산, 보고서 반복 작성에 핵심 인력의 시간이 사라집니다.",
+      },
+      {
+        num: "02",
+        title: "담당자가 바뀌면 처음부터 다시 시작해야 합니다",
+        desc: "업무 방법이 특정 사람 머릿속에만 있어서, 퇴사하면 모든 게 초기화됩니다.",
+      },
+      {
+        num: "03",
+        title: "AI를 써야 한다는 건 아는데, 어디서부터 시작해야 할지 모릅니다",
+        desc: "비싼 시스템을 도입할 예산도, 관리할 개발자도 없습니다.",
+      },
+    ],
+  },
+
   // ② 서비스 섹션
   services: {
     headingLine1: "우리는 방법만 알려주고 떠나지 않습니다.",
     headingLine2: "직접 일을 해결하는 파트너",   // 초록색
-    subtext: "IT를 몰라도 됩니다. 언러닝컴퍼니가 두 가지 방식으로 조직의 짐을 덜어드립니다.",
+    subtext: "IT를 몰라도 됩니다. 언러닝컴퍼니가 세 가지 방식으로 조직의 짐을 덜어드립니다.",
     trackA: {
       title: "내부의 복잡한 일 줄이기",
       subtitle: "우리 조직에 딱 맞는 AI 시스템 만들기",
@@ -128,6 +151,11 @@ const CONTENT = {
       title: "새로운 프로젝트 함께 따내기",
       subtitle: "사업 확장 파트너",
       desc: "내부 일이 정리되었다면, 이제 함께 밖으로 나갈 차례입니다. 언러닝컴퍼니와 함께 혼자서는 도전하기 어려웠던 새로운 사업에 도전해보세요. 복잡한 제안서 작성부터 꼼꼼한 실무 운영까지 언러닝컴퍼니가 든든한 파트너가 되어 드립니다.",
+    },
+    trackC: {
+      title: "기획부터 성과 보고까지, 통째로 맡기기",
+      subtitle: "프로젝트 전체 운영 파트너",
+      desc: "사람이 부족한 공공기관·재단·NGO를 위해, 참여자 모집부터 교육 기획, 성과 측정, 인재 연결까지 프로젝트 전 과정을 언러닝컴퍼니가 직접 운영합니다.",
     },
     budgetBox: {
       heading: '"이 모든 과정을 진행하는데 비용이 많이 들지 않을까요?"',
@@ -146,7 +174,33 @@ const CONTENT = {
     ],
   },
 
-  // ⑤ 어바웃 섹션
+  // ⑤ 핵심 가치 섹션
+  coreValues: {
+    headingLine1: "언러닝컴퍼니가",
+    headingLine2: "일하는 방식",
+    items: [
+      {
+        icon: "①",
+        title: "시스템으로 일합니다",
+        desc: "특정 사람이 아닌, AI와 도구를 써서 누가 해도 같은 결과가 나오는 구조를 만듭니다.",
+        color: "#00ff88",
+      },
+      {
+        icon: "②",
+        title: "미션 방향으로 성장합니다",
+        desc: "기술 자체보다, 그 기술이 조직의 목표에 어떻게 도움이 되는지를 먼저 생각합니다.",
+        color: "#22d3ee",
+      },
+      {
+        icon: "③",
+        title: "노하우를 함께 나눕니다",
+        desc: "프로젝트를 해결한 방법을 정리해서 남겨, 다른 임팩트 조직도 함께 성장하도록 돕습니다.",
+        color: "#a78bfa",
+      },
+    ],
+  },
+
+  // ⑥ 어바웃 섹션
   about: {
     headingLine1: "언러닝컴퍼니는 세상을 바꾸려는 조직의 현실을 가장 잘 아는",
     headingLine2: "전문가들",          // 주황색
@@ -154,6 +208,26 @@ const CONTENT = {
     philosophyQuote: "채우기 위해서는 먼저 비워야 합니다.",
     philosophyBody: "조직의 혁신은 어려운 기술을 억지로 배우는 것에서 시작하지 않습니다. 지금까지 해왔던 비효율적인 방식을 먼저 버리는 것(Unlearning)이 핵심입니다. 우리 조직에 맞지 않는 복잡한 기술 대신, 지금 당장 현장에서 바로 쓸 수 있는 도구만 골라 드립니다.",
     tags: ["10년차 현장 경험", "조직에 맞는 AI 도구 설계", "정부지원금 매칭 전문가", "AI 실무 청년 투입"],
+    team: [
+      {
+        name: "박정웅",
+        role: "생태계 연결 & 커뮤니케이션",
+        quote: "더 나은 내일을 위해 모든 관계자 사이를 연결하는 사람",
+        tags: ["임팩트얼라이언스 커뮤니티 운영", "팀빌딩·온보딩 시스템", "임팩트 스토리텔링"],
+      },
+      {
+        name: "박형호",
+        role: "현장 오퍼레이션 & IT 구축",
+        quote: "임팩트 조직의 막히는 지점을 가장 잘 아는 실무 전문가",
+        tags: ["5개 임팩트 조직 실무 경험", "노코드 업무 자동화 직접 구축", "500+ 생산성 코칭"],
+      },
+      {
+        name: "이왕수",
+        role: "사업 개발 & 조직문화",
+        quote: "소셜 미션을 실제로 돈이 되는 사업으로 만드는 사람",
+        tags: ["대기업·공공기관 프로젝트 수주·운영", "HR·조직문화 개선", "청년 일자리 사업 기획·운영"],
+      },
+    ],
   },
 
   // ⑥ 컨택 섹션
@@ -470,10 +544,12 @@ function MainView() {
   return (
     <div style={{ animation: "fadeInUp 0.5s ease" }}>
       <HeroSection />
+      <ProblemSection />
       <ServicesSection />
       <CurriculumSection />
       <RecommendedTracksSection />
       <ImpactSection />
+      <CoreValuesSection />
       <AboutSection />
       <ContactSection />
     </div>
@@ -551,6 +627,35 @@ function HeroSection() {
   );
 }
 
+function ProblemSection() {
+  const [ref, visible] = useInView();
+  return (
+    <section ref={ref} style={{ padding: "100px 20px", background: C.bgSoft, borderTop: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+        <div style={{ fontFamily: MONO, fontSize: 12, color: C.red, letterSpacing: ".2em", textTransform: "uppercase", marginBottom: 16 }}>// Why It Matters</div>
+        <h2 style={{ fontFamily: SANS, fontSize: "clamp(26px, 4.5vw, 40px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 56, wordBreak: "keep-all" }}>
+          {CONTENT.problem.headingLine1}<br />
+          <span style={{ color: C.red }}>{CONTENT.problem.headingLine2}</span>
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="impact-grid">
+          {CONTENT.problem.items.map((item, i) => (
+            <div key={i} style={{
+              background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.red}55`,
+              borderRadius: 10, padding: 28,
+              opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
+              transition: `all .5s ease ${i * 0.12}s`
+            }}>
+              <div style={{ fontFamily: MONO, fontSize: 13, color: C.red, fontWeight: 700, marginBottom: 16 }}>{item.num}</div>
+              <h3 style={{ fontFamily: SANS, fontSize: 16, fontWeight: 700, color: C.textBright, marginBottom: 12, lineHeight: 1.5, wordBreak: "keep-all" }}>{item.title}</h3>
+              <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 300, color: C.textDim, lineHeight: 1.7, wordBreak: "keep-all" }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ServicesSection() {
   const [ref, visible] = useInView();
   const [active, setActive] = useState(0);
@@ -571,6 +676,14 @@ function ServicesSection() {
       desc: CONTENT.services.trackB.desc,
       before: ["> [ERROR] 좋은 기획은 있지만 실행할 손발이 부족함", "> [WARN] 지원 사업 제안서 및 결과 보고서 작성 부담"],
       after: ["> [OK] 10년차 전문가가 제안서 작성 및 전략 세팅 완료", "> [OK] 청년 전문가(AX 빌더) 실무 투입, 운영 안착"]
+    },
+    {
+      id: "C",
+      title: CONTENT.services.trackC.title,
+      subtitle: CONTENT.services.trackC.subtitle,
+      desc: CONTENT.services.trackC.desc,
+      before: ["> [ERROR] 사업은 수주했는데 운영할 인력이 없음", "> [WARN] 기획·모집·교육·성과보고 전 과정이 부담"],
+      after: ["> [OK] 참여자 모집부터 성과 측정, 인재 연결까지 전담", "> [OK] 공공기관·재단·NGO가 핵심 미션에만 집중"]
     }
   ];
 
@@ -796,12 +909,41 @@ function ImpactSection() {
   );
 }
 
+function CoreValuesSection() {
+  const [ref, visible] = useInView();
+  return (
+    <section ref={ref} style={{ padding: "120px 20px", background: C.bgSoft, borderTop: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+        <SectionLabel num="05" text="Our Values" />
+        <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 48, wordBreak: "keep-all" }}>
+          {CONTENT.coreValues.headingLine1}<br />
+          <span style={{ color: C.orange }}>{CONTENT.coreValues.headingLine2}</span>
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="impact-grid">
+          {CONTENT.coreValues.items.map((item, i) => (
+            <div key={i} style={{
+              background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${item.color}`,
+              borderRadius: 10, padding: 32,
+              opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
+              transition: `all .5s ease ${i * 0.15}s`
+            }}>
+              <div style={{ fontFamily: MONO, fontSize: 28, color: item.color, marginBottom: 16 }}>{item.icon}</div>
+              <h3 style={{ fontFamily: SANS, fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 12, wordBreak: "keep-all" }}>{item.title}</h3>
+              <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 300, color: C.textDim, lineHeight: 1.7, wordBreak: "keep-all" }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AboutSection() {
   const [ref, visible] = useInView();
   return (
-    <section id="about" ref={ref} style={{ padding: "120px 20px", background: C.bgSoft, borderTop: `1px solid ${C.border}` }}>
+    <section id="about" ref={ref} style={{ padding: "120px 20px", background: C.bg, borderTop: `1px solid ${C.border}` }}>
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-        <SectionLabel num="05" text="About Us" />
+        <SectionLabel num="06" text="About Us" />
         <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
           {CONTENT.about.headingLine1} <span style={{ color: C.orange }}>{CONTENT.about.headingLine2}</span>입니다.
         </h2>
@@ -822,6 +964,29 @@ function AboutSection() {
               <span key={tag} style={{ background: `${C.orange}11`, color: C.orange, border: `1px solid ${C.orange}33`, padding: "6px 12px", borderRadius: 4, fontFamily: SANS, fontSize: 13, fontWeight: 500 }}>
                 {tag}
               </span>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginTop: 48 }}>
+          <div style={{ fontFamily: MONO, fontSize: 13, color: C.orange, fontWeight: 700, marginBottom: 24, letterSpacing: ".1em" }}># TEAM</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="impact-grid">
+            {CONTENT.about.team.map((member, i) => (
+              <div key={i} style={{
+                background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.orange}`,
+                borderRadius: 10, padding: 28
+              }}>
+                <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 900, color: C.textBright, marginBottom: 4 }}>{member.name}</div>
+                <div style={{ fontFamily: MONO, fontSize: 11, color: C.orange, letterSpacing: ".05em", marginBottom: 16 }}>{member.role}</div>
+                <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 300, color: C.textDim, lineHeight: 1.7, marginBottom: 20, wordBreak: "keep-all", fontStyle: "italic" }}>"{member.quote}"</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {member.tags.map(tag => (
+                    <span key={tag} style={{ fontFamily: SANS, fontSize: 12, color: C.textDim, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: "4px 10px", wordBreak: "keep-all" }}>
+                      · {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
