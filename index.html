@@ -109,6 +109,8 @@ const CONTENT = {
 
   // ① 히어로 섹션 — 맨 처음 보이는 화면
   hero: {
+    tagline1: "임팩트 조직의 운영 파트너, 언러닝컴퍼니",
+    tagline2: "서류, 정산, AI 시스템까지 직접 해결합니다",
     headingLine1: "세상을 바꾸는 일에만",
     headingLine2: "집중하세요",          // 초록색으로 표시되는 부분
     subtext: "매일 반복되는 복잡한 서류 작업과 영수증 정리에 지치셨나요?\n언러닝컴퍼니가 그 시간을 줄여드리겠습니다",
@@ -205,6 +207,8 @@ const CONTENT = {
     headingLine1: "언러닝컴퍼니는 세상을 바꾸려는 조직의 현실을 가장 잘 아는",
     headingLine2: "전문가들",          // 주황색
     subtext: "화려해 보이는 시스템을 팔려는 게 아닙니다.\n저희도 세상을 바꾸는 현장에서 10년 이상 직접 일했고,\n서류 작업에 치여 정작 중요한 일을 놓쳤던 경험이 있습니다.",
+    vision: "사람이 자라는 AI 시대",
+    mission: "낡은 워크플로우를 파괴하여 파트너 조직이 핵심 가치와 미션에만 온전히 몰입할 수 있도록 돕는다.",
     philosophyQuote: "채우기 위해서는 먼저 비워야 합니다.",
     philosophyBody: "조직의 혁신은 어려운 기술을 억지로 배우는 것에서 시작하지 않습니다. 지금까지 해왔던 비효율적인 방식을 먼저 버리는 것(Unlearning)이 핵심입니다. 우리 조직에 맞지 않는 복잡한 기술 대신, 지금 당장 현장에서 바로 쓸 수 있는 도구만 골라 드립니다.",
     tags: ["10년차 현장 경험", "조직에 맞는 AI 도구 설계", "정부지원금 매칭 전문가", "AI 실무 청년 투입"],
@@ -549,7 +553,6 @@ function MainView() {
       <CurriculumSection />
       <RecommendedTracksSection />
       <ImpactSection />
-      <CoreValuesSection />
       <AboutSection />
       <ContactSection />
     </div>
@@ -608,6 +611,10 @@ function HeroSection() {
       <div style={{
         textAlign: "center", opacity: showContent ? 1 : 0, transform: showContent ? "translateY(0)" : "translateY(16px)", transition: "all .8s ease", marginBottom: 40, zIndex: 1
       }}>
+        <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 4, marginBottom: 24, padding: "10px 20px", border: `1px solid ${C.green}44`, borderRadius: 8, background: `${C.green}08` }}>
+          <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.green, letterSpacing: ".01em" }}>{CONTENT.hero.tagline1}</span>
+          <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 300, color: C.textDim, letterSpacing: ".01em" }}>— {CONTENT.hero.tagline2}</span>
+        </div>
         <h1 style={{ fontFamily: SANS, fontSize: "clamp(32px, 6vw, 56px)", fontWeight: 900, lineHeight: 1.25, color: C.textBright, letterSpacing: "-.02em", wordBreak: "keep-all", maxWidth: 900, margin: "0 auto" }}>
           {CONTENT.hero.headingLine1}<br />
           <span style={{ color: C.green }}>{CONTENT.hero.headingLine2}</span>
@@ -941,9 +948,9 @@ function CoreValuesSection() {
 function AboutSection() {
   const [ref, visible] = useInView();
   return (
-    <section id="about" ref={ref} style={{ padding: "120px 20px", background: C.bg, borderTop: `1px solid ${C.border}` }}>
+    <section id="about" ref={ref} style={{ padding: "120px 20px", background: C.bgSoft, borderTop: `1px solid ${C.border}` }}>
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-        <SectionLabel num="06" text="About Us" />
+        <SectionLabel num="05" text="About Us" />
         <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
           {CONTENT.about.headingLine1} <span style={{ color: C.orange }}>{CONTENT.about.headingLine2}</span>입니다.
         </h2>
@@ -951,7 +958,35 @@ function AboutSection() {
           {CONTENT.about.subtext}
         </p>
 
-        <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, padding: 40, position: "relative" }}>
+        {/* Vision + Mission */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }} className="impact-grid">
+          <div style={{
+            background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.orange}`,
+            borderRadius: 10, padding: 32,
+            opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)", transition: "all .5s ease 0s"
+          }}>
+            <div style={{ fontFamily: MONO, fontSize: 11, color: C.orange, fontWeight: 700, letterSpacing: ".12em", marginBottom: 16 }}>VISION</div>
+            <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.8vw, 20px)", fontWeight: 700, color: C.textBright, lineHeight: 1.5, wordBreak: "keep-all" }}>
+              {CONTENT.about.vision}
+            </p>
+          </div>
+          <div style={{
+            background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.purple}`,
+            borderRadius: 10, padding: 32,
+            opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)", transition: "all .5s ease .12s"
+          }}>
+            <div style={{ fontFamily: MONO, fontSize: 11, color: C.purple, fontWeight: 700, letterSpacing: ".12em", marginBottom: 16 }}>MISSION</div>
+            <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.8vw, 20px)", fontWeight: 700, color: C.textBright, lineHeight: 1.6, wordBreak: "keep-all" }}>
+              {CONTENT.about.mission}
+            </p>
+          </div>
+        </div>
+
+        {/* Philosophy */}
+        <div style={{
+          background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, padding: 40, marginBottom: 56,
+          opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)", transition: "all .5s ease .2s"
+        }}>
           <div style={{ fontFamily: MONO, fontSize: 13, color: C.orange, fontWeight: 700, marginBottom: 24, letterSpacing: ".1em" }}># OUR_PHILOSOPHY : UN-LEARNING</div>
           <h3 style={{ fontFamily: SANS, fontSize: 24, fontWeight: 700, color: C.textBright, marginBottom: 16 }}>
             "{CONTENT.about.philosophyQuote}"
@@ -968,17 +1003,53 @@ function AboutSection() {
           </div>
         </div>
 
-        <div style={{ marginTop: 48 }}>
-          <div style={{ fontFamily: MONO, fontSize: 13, color: C.orange, fontWeight: 700, marginBottom: 24, letterSpacing: ".1em" }}># TEAM</div>
+        {/* How We Work */}
+        <div style={{ marginBottom: 56 }}>
+          <div style={{ fontFamily: MONO, fontSize: 13, color: C.textDim, fontWeight: 700, marginBottom: 28, letterSpacing: ".1em" }}># HOW_WE_WORK</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="impact-grid">
+            {CONTENT.coreValues.items.map((item, i) => (
+              <div key={i} style={{
+                background: C.bg, border: `1px solid ${C.border}`, borderTop: `3px solid ${item.color}`,
+                borderRadius: 10, padding: 28,
+                opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
+                transition: `all .5s ease ${0.3 + i * 0.1}s`
+              }}>
+                <div style={{ fontFamily: MONO, fontSize: 26, color: item.color, marginBottom: 14 }}>{item.icon}</div>
+                <h3 style={{ fontFamily: SANS, fontSize: 16, fontWeight: 700, color: C.textBright, marginBottom: 10, wordBreak: "keep-all" }}>{item.title}</h3>
+                <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 300, color: C.textDim, lineHeight: 1.7, wordBreak: "keep-all" }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Team */}
+        <div>
+          <div style={{ fontFamily: MONO, fontSize: 13, color: C.textDim, fontWeight: 700, marginBottom: 28, letterSpacing: ".1em" }}># TEAM</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="impact-grid">
             {CONTENT.about.team.map((member, i) => (
               <div key={i} style={{
                 background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.orange}`,
-                borderRadius: 10, padding: 28
+                borderRadius: 10, padding: 28,
+                opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
+                transition: `all .5s ease ${0.5 + i * 0.12}s`
               }}>
-                <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 900, color: C.textBright, marginBottom: 4 }}>{member.name}</div>
-                <div style={{ fontFamily: MONO, fontSize: 11, color: C.orange, letterSpacing: ".05em", marginBottom: 16 }}>{member.role}</div>
-                <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 300, color: C.textDim, lineHeight: 1.7, marginBottom: 20, wordBreak: "keep-all", fontStyle: "italic" }}>"{member.quote}"</p>
+                {/* Photo slot */}
+                <div style={{
+                  width: "100%", height: 200, marginBottom: 24,
+                  background: C.bgHead, border: `1.5px dashed ${C.borderBright}`,
+                  borderRadius: 12,
+                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8
+                }}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.textFaint} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <span style={{ fontFamily: MONO, fontSize: 10, color: C.textFaint, letterSpacing: ".08em" }}>PHOTO</span>
+                </div>
+                <div style={{ textAlign: "center", marginBottom: 20 }}>
+                  <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 900, color: C.textBright, marginBottom: 4 }}>{member.name}</div>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: C.orange, letterSpacing: ".05em" }}>{member.role}</div>
+                </div>
+                <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 300, color: C.textDim, lineHeight: 1.5, marginBottom: 20, fontStyle: "italic", textAlign: "center", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>"{member.quote}"</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   {member.tags.map(tag => (
                     <span key={tag} style={{ fontFamily: SANS, fontSize: 12, color: C.textDim, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: "4px 10px", wordBreak: "keep-all" }}>
