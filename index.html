@@ -490,7 +490,7 @@ function Nav({ view, setView, scrollToSection }) {
             fontFamily: MONO, fontSize: 12, color: C.green, background: "transparent", border: `1px solid ${C.green}`,
             padding: "8px 16px", borderRadius: 4, transition: "all .2s", whiteSpace: "nowrap", cursor: "pointer"
           }} onMouseEnter={e => { e.target.style.background = C.green; e.target.style.color = C.bg; }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = C.green; }}>
-            무료 진단받기 →
+            문의하기 →
           </button>
           <button className="hamburger" onClick={() => setMenuOpen(o => !o)} style={{
             background: "none", border: "none", cursor: "pointer",
@@ -529,7 +529,7 @@ function Nav({ view, setView, scrollToSection }) {
             background: "transparent", border: `1px solid ${C.green}`,
             padding: "14px 36px", borderRadius: 4, cursor: "pointer"
           }}>
-            무료 진단받기 →
+            문의하기 →
           </button>
         </div>
       )}
@@ -1106,7 +1106,7 @@ function ContactSection() {
               </label>
             </div>
             <button type="submit" style={{ marginTop: 10, width: "100%", padding: "16px", background: C.green, color: C.bg, border: "none", borderRadius: 6, fontFamily: SANS, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "opacity .2s" }} onMouseEnter={e=>e.target.style.opacity=0.8} onMouseLeave={e=>e.target.style.opacity=1}>
-              무료 진단 및 커피챗 신청하기 (Enter)
+              문의하기 (Enter)
             </button>
             <div style={{ textAlign: "center", fontFamily: MONO, fontSize: 11, color: C.textFaint, marginTop: 8 }}># 진단 결과는 PDF로 제공되며, 상담 비용은 무료입니다.</div>
           </form>
