@@ -417,7 +417,7 @@ function SectionLabel({ num, text }) {
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 12, fontFamily: MONO, fontSize: 12, color: C.textDim, marginBottom: 24, letterSpacing: ".1em", textTransform: "uppercase" }}>
       <span style={{ display: "inline-block", width: 24, height: 1, background: C.green }} />
-      <span style={{ color: C.green }}>{num}</span><span>{text}</span>
+      <span>{text}</span>
     </div>
   );
 }
