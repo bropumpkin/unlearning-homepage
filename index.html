@@ -82,6 +82,12 @@
       .footer-contact { text-align: left !important; }
       .footer-bottom { flex-direction: column; gap: 8px; }
     }
+
+    /* Hover utilities — replaces inline onMouseEnter/Leave DOM manipulation */
+    .hover-green { transition: color .2s; }
+    .hover-green:hover { color: #00ff88 !important; }
+    .btn-submit { transition: opacity .2s; }
+    .btn-submit:hover { opacity: 0.8; }
   </style>
 </head>
 <body>
@@ -101,6 +107,23 @@ const C = {
 const MONO = "'JetBrains Mono', 'Fira Code', monospace";
 const SANS = "'Noto Sans KR', sans-serif";
 const MODULE_COLOR = { A: "#22d3ee", B: "#00ff88", C: "#a78bfa" };
+
+/* ==========================================================================
+   SHARED CONSTANTS — 매직 넘버/중복 스타일 중앙화
+   ========================================================================== */
+const TIMING = { typingChar: 30, resultChar: 20, resultPause: 200, initialDelay: 400 };
+const SPACING = { sectionY: "120px", sectionYSm: "100px", innerMax: 1000 };
+const STYLES = {
+  card:   { background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, padding: 28 },
+  cardLg: { background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, padding: 32 },
+  section:      (bg) => ({ padding: `${SPACING.sectionY} 20px`, ...(bg ? { background: bg, borderTop: `1px solid ${C.border}` } : {}) }),
+  inner:  { maxWidth: SPACING.innerMax, margin: "0 auto" },
+  fadeIn: (visible, i, delay = 0.12) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(24px)",
+    transition: `all .5s ease ${i * delay}s`,
+  }),
+};
 
 /* ==========================================================================
    ✏️  홈페이지 텍스트 수정은 이 CONTENT 객체만 편집하세요
@@ -503,10 +526,13 @@ function Nav({ view, setView, scrollToSection }) {
           }} onMouseEnter={e => { e.target.style.background = C.green; e.target.style.color = C.bg; }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = C.green; }}>
             문의하기 →
           </button>
-          <button className="hamburger" onClick={() => setMenuOpen(o => !o)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            color: C.textBright, fontSize: 24, lineHeight: 1, padding: "4px 6px", display: "flex", alignItems: "center"
-          }}>
+          <button
+            className="hamburger"
+            onClick={() => setMenuOpen(o => !o)}
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            style={{ background: "none", border: "none", cursor: "pointer", color: C.textBright, fontSize: 24, lineHeight: 1, padding: "4px 6px", display: "flex", alignItems: "center" }}
+          >
             {menuOpen ? '✕' : '☰'}
           </button>
         </div>
@@ -570,26 +596,18 @@ function MainView() {
 }
 
 // 개별 섹션들 (기존 코드 유지)
-function HeroSection() {
+/* 타이핑 애니메이션 로직을 HeroSection 렌더링에서 분리 */
+function useTypingAnimation(cmd, results) {
   const [phase, setPhase] = useState(0);
   const [cmdTyped, setCmdTyped] = useState("");
   const [resLines, setResLines] = useState([]);
   const [showContent, setShowContent] = useState(false);
-
-  const cmd = "AI 전문가 투입 — 서류업무를 대신 해결합니다";
-  const results = [
-    "→ 조직 업무 스캔 중...",
-    "→ 반복되는 영수증 정리 발견",
-    "→ 끝없는 보고서 작성 발견",
-    "✓ 10년차 전문가 & AI 투입 준비 완료.",
-  ];
-
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      await new Promise(r => setTimeout(r, 400));
+      await new Promise(r => setTimeout(r, TIMING.initialDelay));
       for (let i = 0; i <= cmd.length; i++) {
-        if (cancelled) return; setCmdTyped(cmd.slice(0, i)); await new Promise(r => setTimeout(r, 30));
+        if (cancelled) return; setCmdTyped(cmd.slice(0, i)); await new Promise(r => setTimeout(r, TIMING.typingChar));
       }
       setPhase(1); await new Promise(r => setTimeout(r, 300));
       for (const line of results) {
@@ -598,14 +616,26 @@ function HeroSection() {
         for (let i = 0; i < line.length; i++) {
           if (cancelled) return;
           setResLines(prev => [...prev.slice(0, -1), line.slice(0, i + 1)]);
-          await new Promise(r => setTimeout(r, 20));
+          await new Promise(r => setTimeout(r, TIMING.resultChar));
         }
-        await new Promise(r => setTimeout(r, 200));
+        await new Promise(r => setTimeout(r, TIMING.resultPause));
       }
       setShowContent(true);
     })();
     return () => { cancelled = true; };
   }, []);
+  return { phase, cmdTyped, resLines, showContent };
+}
+
+function HeroSection() {
+  const cmd = "AI 전문가 투입 — 서류업무를 대신 해결합니다";
+  const results = [
+    "→ 조직 업무 스캔 중...",
+    "→ 반복되는 영수증 정리 발견",
+    "→ 끝없는 보고서 작성 발견",
+    "✓ 10년차 전문가 & AI 투입 준비 완료.",
+  ];
+  const { phase, cmdTyped, resLines, showContent } = useTypingAnimation(cmd, results);
 
   return (
     <section id="home" style={{
@@ -718,9 +748,9 @@ function ServicesSection() {
           {CONTENT.services.subtext}
         </p>
 
-        <div className="track-tabs" style={{ display: "flex", gap: 12, marginBottom: 32 }}>
+        <div className="track-tabs" role="tablist" style={{ display: "flex", gap: 12, marginBottom: 32 }}>
           {tracks.map((t, i) => (
-            <button key={i} onClick={() => setActive(i)} className={`track-tab-btn${active === i ? " track-tab-active" : ""}`}>
+            <button key={i} onClick={() => setActive(i)} role="tab" aria-selected={active === i} className={`track-tab-btn${active === i ? " track-tab-active" : ""}`}>
               <div className="track-tab-inner">
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <span className="track-tab-dot" />
@@ -993,11 +1023,81 @@ function CoreValuesSection() {
   );
 }
 
+/* 철학 블록 — AboutSection에서 분리 */
+function PhilosophyBlock({ visible }) {
+  return (
+    <div style={{
+      ...STYLES.card, padding: 40, marginBottom: 56,
+      ...STYLES.fadeIn(visible, 2, 0.1)
+    }}>
+      <div style={{ fontFamily: MONO, fontSize: 13, color: C.orange, fontWeight: 700, marginBottom: 24, letterSpacing: ".1em" }}># OUR_PHILOSOPHY : UN-LEARNING</div>
+      <h3 style={{ fontFamily: SANS, fontSize: 24, fontWeight: 700, color: C.textBright, marginBottom: 16 }}>
+        "{CONTENT.about.philosophyQuote}"
+      </h3>
+      <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 300, color: C.textDim, lineHeight: 1.8, wordBreak: "keep-all", marginBottom: 24, whiteSpace: "pre-line" }}>
+        {CONTENT.about.philosophyBody}
+      </p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, paddingTop: 20, borderTop: `1px dashed ${C.border}` }}>
+        {CONTENT.about.tags.map(tag => (
+          <span key={tag} style={{ background: `${C.orange}11`, color: C.orange, border: `1px solid ${C.orange}33`, padding: "6px 12px", borderRadius: 4, fontFamily: SANS, fontSize: 13, fontWeight: 500 }}>
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* 팀 카드 목록 — AboutSection에서 분리 */
+function TeamCards({ visible }) {
+  return (
+    <div>
+      <div style={{ fontFamily: MONO, fontSize: 13, color: C.textDim, fontWeight: 700, marginBottom: 28, letterSpacing: ".1em" }}># TEAM</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="impact-grid">
+        {CONTENT.about.team.map((member, i) => (
+          <div key={i} style={{
+            ...STYLES.card, borderTop: `3px solid ${C.orange}`,
+            ...STYLES.fadeIn(visible, i, 0.12),
+            transitionDelay: `${0.5 + i * 0.12}s`,
+          }}>
+            {member.photo
+              ? <img src={member.photo} alt={`${member.name} — ${member.role}`} style={{ width: "100%", height: 200, objectFit: "cover", objectPosition: "top", borderRadius: 12, marginBottom: 24, display: "block" }} />
+              : <div style={{
+                  width: "100%", height: 200, marginBottom: 24,
+                  background: C.bgHead, border: `1.5px dashed ${C.borderBright}`,
+                  borderRadius: 12,
+                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8
+                }} aria-hidden="true">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.textFaint} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <span style={{ fontFamily: MONO, fontSize: 10, color: C.textFaint, letterSpacing: ".08em" }}>PHOTO</span>
+                </div>
+            }
+            <div style={{ textAlign: "center", marginBottom: 20 }}>
+              <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 900, color: C.textBright, marginBottom: 4 }}>{member.name}</div>
+              <div style={{ fontFamily: MONO, fontSize: 11, color: C.orange, letterSpacing: ".05em" }}>{member.role}</div>
+            </div>
+            <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 300, color: C.textDim, lineHeight: 1.5, marginBottom: 20, fontStyle: "italic", textAlign: "center", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>"{member.quote}"</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {member.tags.map(tag => (
+                <span key={tag} style={{ fontFamily: SANS, fontSize: 12, color: C.textDim, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: "4px 10px", wordBreak: "keep-all" }}>
+                  · {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function AboutSection() {
   const [ref, visible] = useInView();
   return (
-    <section id="about" ref={ref} style={{ padding: "120px 20px", background: C.bgSoft, borderTop: `1px solid ${C.border}` }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+    <section id="about" ref={ref} style={STYLES.section(C.bgSoft)}>
+      <div style={STYLES.inner}>
         <SectionLabel num="05" text="About Us" />
         <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: C.textBright, lineHeight: 1.3, marginBottom: 20, wordBreak: "keep-all" }}>
           {CONTENT.about.headingLine1} <span style={{ color: C.orange }}>{CONTENT.about.headingLine2}</span>입니다.
@@ -1008,21 +1108,13 @@ function AboutSection() {
 
         {/* Vision + Mission */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }} className="impact-grid">
-          <div style={{
-            background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.orange}`,
-            borderRadius: 10, padding: 32,
-            opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)", transition: "all .5s ease 0s"
-          }}>
+          <div style={{ ...STYLES.cardLg, borderTop: `3px solid ${C.orange}`, ...STYLES.fadeIn(visible, 0) }}>
             <div style={{ fontFamily: MONO, fontSize: 11, color: C.orange, fontWeight: 700, letterSpacing: ".12em", marginBottom: 16 }}>VISION</div>
             <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.8vw, 20px)", fontWeight: 700, color: C.textBright, lineHeight: 1.5, wordBreak: "keep-all" }}>
               {CONTENT.about.vision}
             </p>
           </div>
-          <div style={{
-            background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.purple}`,
-            borderRadius: 10, padding: 32,
-            opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)", transition: "all .5s ease .12s"
-          }}>
+          <div style={{ ...STYLES.cardLg, borderTop: `3px solid ${C.purple}`, ...STYLES.fadeIn(visible, 1) }}>
             <div style={{ fontFamily: MONO, fontSize: 11, color: C.purple, fontWeight: 700, letterSpacing: ".12em", marginBottom: 16 }}>MISSION</div>
             <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.8vw, 20px)", fontWeight: 700, color: C.textBright, lineHeight: 1.6, wordBreak: "keep-all" }}>
               {CONTENT.about.mission}
@@ -1030,26 +1122,7 @@ function AboutSection() {
           </div>
         </div>
 
-        {/* Philosophy */}
-        <div style={{
-          background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, padding: 40, marginBottom: 56,
-          opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)", transition: "all .5s ease .2s"
-        }}>
-          <div style={{ fontFamily: MONO, fontSize: 13, color: C.orange, fontWeight: 700, marginBottom: 24, letterSpacing: ".1em" }}># OUR_PHILOSOPHY : UN-LEARNING</div>
-          <h3 style={{ fontFamily: SANS, fontSize: 24, fontWeight: 700, color: C.textBright, marginBottom: 16 }}>
-            "{CONTENT.about.philosophyQuote}"
-          </h3>
-          <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 300, color: C.textDim, lineHeight: 1.8, wordBreak: "keep-all", marginBottom: 24 }}>
-            {CONTENT.about.philosophyBody}
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, paddingTop: 20, borderTop: `1px dashed ${C.border}` }}>
-            {CONTENT.about.tags.map(tag => (
-              <span key={tag} style={{ background: `${C.orange}11`, color: C.orange, border: `1px solid ${C.orange}33`, padding: "6px 12px", borderRadius: 4, fontFamily: SANS, fontSize: 13, fontWeight: 500 }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
+        <PhilosophyBlock visible={visible} />
 
         {/* How We Work */}
         <div style={{ marginBottom: 56 }}>
@@ -1059,8 +1132,8 @@ function AboutSection() {
               <div key={i} style={{
                 background: C.bg, border: `1px solid ${C.border}`, borderTop: `3px solid ${item.color}`,
                 borderRadius: 10, padding: 28,
-                opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
-                transition: `all .5s ease ${0.3 + i * 0.1}s`
+                ...STYLES.fadeIn(visible, i, 0.1),
+                transitionDelay: `${0.3 + i * 0.1}s`,
               }}>
                 <div style={{ fontFamily: MONO, fontSize: 26, color: item.color, marginBottom: 14 }}>{item.icon}</div>
                 <h3 style={{ fontFamily: SANS, fontSize: 16, fontWeight: 700, color: C.textBright, marginBottom: 10, wordBreak: "keep-all" }}>{item.title}</h3>
@@ -1070,48 +1143,7 @@ function AboutSection() {
           </div>
         </div>
 
-        {/* Team */}
-        <div>
-          <div style={{ fontFamily: MONO, fontSize: 13, color: C.textDim, fontWeight: 700, marginBottom: 28, letterSpacing: ".1em" }}># TEAM</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="impact-grid">
-            {CONTENT.about.team.map((member, i) => (
-              <div key={i} style={{
-                background: C.bgCard, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.orange}`,
-                borderRadius: 10, padding: 28,
-                opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
-                transition: `all .5s ease ${0.5 + i * 0.12}s`
-              }}>
-                {/* Photo slot */}
-                {member.photo
-                  ? <img src={member.photo} alt={member.name} style={{ width: "100%", height: 200, objectFit: "cover", objectPosition: "top", borderRadius: 12, marginBottom: 24, display: "block" }} />
-                  : <div style={{
-                      width: "100%", height: 200, marginBottom: 24,
-                      background: C.bgHead, border: `1.5px dashed ${C.borderBright}`,
-                      borderRadius: 12,
-                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8
-                    }}>
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.textFaint} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                      </svg>
-                      <span style={{ fontFamily: MONO, fontSize: 10, color: C.textFaint, letterSpacing: ".08em" }}>PHOTO</span>
-                    </div>
-                }
-                <div style={{ textAlign: "center", marginBottom: 20 }}>
-                  <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 900, color: C.textBright, marginBottom: 4 }}>{member.name}</div>
-                  <div style={{ fontFamily: MONO, fontSize: 11, color: C.orange, letterSpacing: ".05em" }}>{member.role}</div>
-                </div>
-                <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 300, color: C.textDim, lineHeight: 1.5, marginBottom: 20, fontStyle: "italic", textAlign: "center", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>"{member.quote}"</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {member.tags.map(tag => (
-                    <span key={tag} style={{ fontFamily: SANS, fontSize: 12, color: C.textDim, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: "4px 10px", wordBreak: "keep-all" }}>
-                      · {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <TeamCards visible={visible} />
       </div>
     </section>
   );
@@ -1119,11 +1151,11 @@ function AboutSection() {
 
 function PrivacyPolicyModal({ onClose }) {
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,.75)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+    <div onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title" style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,.75)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
       <div onClick={e => e.stopPropagation()} style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10, maxWidth: 680, width: "100%", maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 32px 96px rgba(0,0,0,.8)" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
-          <span style={{ fontFamily: SANS, fontSize: 16, fontWeight: 700, color: C.textBright }}>언러닝컴퍼니 개인정보 처리방침</span>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: C.textDim, cursor: "pointer", fontSize: 20, lineHeight: 1, padding: "0 4px" }}>✕</button>
+          <span id="privacy-modal-title" style={{ fontFamily: SANS, fontSize: 16, fontWeight: 700, color: C.textBright }}>언러닝컴퍼니 개인정보 처리방침</span>
+          <button onClick={onClose} aria-label="닫기" style={{ background: "none", border: "none", color: C.textDim, cursor: "pointer", fontSize: 20, lineHeight: 1, padding: "0 4px" }}>✕</button>
         </div>
         <div style={{ overflowY: "auto", padding: "24px", fontFamily: SANS, fontSize: 14, color: C.textDim, lineHeight: 1.9 }}>
           <p>언러닝컴퍼니(이하 '회사'라 한다)는 개인정보 보호법 제30조에 따라 정보 주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리지침을 수립, 공개합니다.</p>
@@ -1200,20 +1232,20 @@ function ContactSection() {
           <div style={{ padding: "28px 24px" }}>
           <form onSubmit={(e) => { e.preventDefault(); if (!agreed) { alert('개인정보 수집 및 이용에 동의해 주세요.'); return; } alert('실제 서비스에서는 문의가 전송됩니다.'); }} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div>
-              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>단체명/기업명</label>
-              <input type="text" required placeholder="예: 세상을바꾸는사람들" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
+              <label htmlFor="contact-org" style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>단체명/기업명</label>
+              <input id="contact-org" type="text" required aria-required="true" placeholder="예: 세상을바꾸는사람들" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
             </div>
             <div>
-              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>담당자 전화번호</label>
-              <input type="tel" required placeholder="예: 010-1234-5678" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
+              <label htmlFor="contact-tel" style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>담당자 전화번호</label>
+              <input id="contact-tel" type="tel" required aria-required="true" placeholder="예: 010-1234-5678" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
             </div>
             <div>
-              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>담당자 이메일</label>
-              <input type="email" required placeholder="예: hello@example.com" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
+              <label htmlFor="contact-email" style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>담당자 이메일</label>
+              <input id="contact-email" type="email" required aria-required="true" placeholder="예: hello@example.com" style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none" }} />
             </div>
             <div>
-              <label style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>언러닝컴퍼니와 함께 해결하고 싶은 문제</label>
-              <textarea required placeholder="예: 영수증 풀칠과 엑셀 정산 때문에 본업을 할 시간이 없습니다." rows={3} style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none", resize: "vertical" }} />
+              <label htmlFor="contact-message" style={{ display: "block", fontFamily: SANS, fontSize: 13, fontWeight: 500, color: C.textDim, marginBottom: 8 }}>언러닝컴퍼니와 함께 해결하고 싶은 문제</label>
+              <textarea id="contact-message" required aria-required="true" placeholder="예: 영수증 풀칠과 엑셀 정산 때문에 본업을 할 시간이 없습니다." rows={3} style={{ width: "100%", padding: "12px 16px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, color: C.textBright, fontFamily: SANS, fontSize: 15, outline: "none", resize: "vertical" }} />
             </div>
             <div style={{ background: `${C.green}08`, border: `1px solid ${C.border}`, borderRadius: 6, padding: "16px" }}>
               <p style={{ fontFamily: SANS, fontSize: 13, color: C.textDim, lineHeight: 1.7, marginBottom: 12 }}>
@@ -1227,7 +1259,7 @@ function ContactSection() {
                 <span style={{ fontFamily: SANS, fontSize: 14, color: C.textBright }}>개인정보 수집 및 이용에 동의합니다. <span style={{ color: C.red, fontSize: 12 }}>(필수)</span></span>
               </label>
             </div>
-            <button type="submit" style={{ marginTop: 10, width: "100%", padding: "16px", background: C.green, color: C.bg, border: "none", borderRadius: 6, fontFamily: SANS, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "opacity .2s" }} onMouseEnter={e=>e.target.style.opacity=0.8} onMouseLeave={e=>e.target.style.opacity=1}>
+            <button type="submit" className="btn-submit" style={{ marginTop: 10, width: "100%", padding: "16px", background: C.green, color: C.bg, border: "none", borderRadius: 6, fontFamily: SANS, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
               문의하기 (Enter)
             </button>
           </form>
@@ -1292,7 +1324,7 @@ function PortableText({ blocks }) {
    ========================================================================== */
 function NewsCard({ post, setView }) {
   const [hover, setHover] = useState(false);
-  const imgUrl = getSanityImageUrl(post.mainImage);
+  const imgUrl = getSanityImageUrl(post.mainImage, 400);
   return (
     <article
       onClick={() => { setView({ type: 'post', id: post._id }); window.scrollTo(0,0); }}
